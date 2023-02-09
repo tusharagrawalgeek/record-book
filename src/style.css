@@ -11,6 +11,10 @@
     padding: 0.4em 2em;
     border-radius: 1em;
     width: 10vh;
+    text-align: center;
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
     /* margin-left: 50px; */
 
 }
