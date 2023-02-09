@@ -1,0 +1,39 @@
+.container{
+    background: #222831;
+    color: #EEEEEE;
+    min-height:100vh;
+}
+.btn-1{
+    background: grey;
+    color: #EEEEEE;
+    border: 0;
+    margin: 1em;
+    padding: 0.4em 2em;
+    border-radius: 1em;
+    width: 10vh;
+    /* margin-left: 50px; */
+
+}
+
+.input{
+    background: black;
+    color: #EEEEEE;
+    margin: 1em;
+    border: 0;
+    padding: 0.6em 3em;
+    border-radius: 1em;
+}
+.form{
+    display: block;
+    width: fit-content;
+    margin: auto;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  height:60vh;
+    padding: 10px;
+}
+.container{
+    display: block;
+    padding: 10px;
+}
