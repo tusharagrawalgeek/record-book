@@ -7,13 +7,13 @@
     background: grey;
     color: #EEEEEE;
     border: 0;
-    margin: 1em;
+    /* margin-top: 3em; */
     padding: 0.4em 2em;
     border-radius: 1em;
     width: 10vh;
     text-align: center;
     display: flex;
-    margin: 0 auto;
+    margin: 1em auto;
     justify-content: center;
     /* margin-left: 50px; */
 
