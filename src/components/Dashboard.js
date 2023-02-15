@@ -2,7 +2,6 @@ import React from "react";
 import { useState } from "react";
 import '../style.css';
 import * as color from '../colors.js';
-import { borderColor } from "@mui/system";
 function Dashboard(){
     const data=[
         {
