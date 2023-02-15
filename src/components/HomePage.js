@@ -9,7 +9,7 @@ import {
     Routes,
     Redirect,
   } from "react-router-dom";
-function HomePage(){
+    function HomePage(){
     return(
         <>
         <Router>
@@ -19,7 +19,7 @@ function HomePage(){
                 </div>
                 <div className="right">
                     <Routes>
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/" element={<Dashboard />} />
                     <Route path="/import" element={<Import/>} />
                     
                     </Routes>

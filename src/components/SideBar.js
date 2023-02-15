@@ -23,7 +23,7 @@ function SideBar(){
                             width:"100%"
                         }}>
                             <tr >
-                                <Link to="/dashboard">
+                                <Link to="/">
                                 <td className={state.selectedOption==="dashboard"?"tr-left-selected":"tr-left"}
                                 onClick={handleClick}
                                 name="dashboard">
@@ -48,11 +48,13 @@ function SideBar(){
                                 </td>
                             </tr>
                             <tr >
+                                <Link to="/logout">
                                 <td className={state.selectedOption==="logout"?"tr-left-selected":"tr-left"}
                                 onClick={handleClick}
                                 name="logout">
                                     Logout
                                 </td>
+                                </Link>
                             </tr>
                         </table>
                         

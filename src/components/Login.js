@@ -1,3 +1,4 @@
+import { Link } from "@mui/material";
 import React,{useState} from "react";
 import * as colors from "../colors.js";
 import '../style.css';
@@ -20,6 +21,12 @@ function Login(props){
     function handleSubmit(e){
         e.preventDefault();
         console.log(state.username,state.pswd);
+        if(state.username==="tushar"){
+            console.log("Username matched");
+            return props.changeAuthentication(true);
+        }
+        return props.changeAuthentication(false);
+
     }
     return(
         <>
