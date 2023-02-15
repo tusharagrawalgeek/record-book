@@ -18,13 +18,6 @@
     /* margin-left: 50px; */
 
 }
-.btn-3{
-    
-}
-<<<<<<< HEAD
-
-=======
->>>>>>> 7cb64cbf2b7fc29a53630ede814ea5718767d4f4
 .input{
     background: black;
     color: #EEEEEE;
@@ -49,29 +42,52 @@
 }
 .container-bg{
     background-color: #222831;
+    max-height: 100vh;
     min-height: 100vh;
     color:#EEEEEE;
+    overflow:hidden;    
+    /* position: fixed; */
+}
+.right{
+    display: inline-block;
+    vertical-align: top;
+    padding: 2em;
+    width: 80%;
+    position: fixed;
+    /* height: 100%; */
 }
 .left{
+    display: inline-block;
     background-color: #393E46;
-    width: 15%;
-    min-height: 100vh;
+    width: 10%;
+    min-height:90vh;
+    max-height:90vh;
     padding: 5vh;
+    display: inline-block;
 }
 .table-container{
-    padding-top: 10vh;
+    padding: 10vh 2vh;
     border-collapse: separate;
     border-spacing: 0 15px;
 }
 td{
     /* color: red; */
     padding: 10px 0;
+    text-align: center;
+}
+.td-add{
+    /* color: red; */
+    padding: 10px 0;
+    text-align: left;
+    width:0%;
 }
 .tr-left{
     font-weight: lighter;
     cursor: grab;
     display: inline-block;
     margin: auto;
+    color:#EEEEEE;
+    /* position: fixed; */
 }
 .tr-left:hover{
     font-weight:normal;
@@ -83,4 +99,62 @@ td{
     font-weight: bold;
     cursor: grab;
     display: inline-block;
+}
+.th{
+    color: #00ADB5;
+    border: 1px solid #EEEEEE;
+    padding: 5px;
+}
+.td-1{
+    border: 1px solid #EEEEEE;
+    padding: 5px 10px;
+}
+.tditem{
+    /* padding: 5px 10px; */
+    /* text-align: center; */
+    width: 0%;
+}
+.inputitem{
+    background-color:transparent;
+    border: 0;
+    border-bottom: 1px solid #00ADB5;
+    padding: 5px;
+    color: #EEEEEE;
+    outline: none;
+    text-align: center;
+    
+}
+.td-add-btn{
+    text-align: right;
+    padding-top: 2em;
+    padding-right: 5em;
+}
+.btn-add{
+    background-color: #393E46;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 2px;
+    color: #00ADB5;
+    font-weight: bold;
+    
+    /* margin: auto; */
+    /* box-shadow:1px 1px 2px 0px black; */
+}
+.btn-add:hover{
+    background-color: #393E46;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 2px;
+    color: #00ADB5;
+    font-weight: bold;
+    box-shadow:1px 1px 2px 0px black;
+}
+.btn-add:active{
+    background-color: #393E46;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 2px;
+    color: #00ADB5;
+    font-weight: bold;
+    box-shadow:inset 1px 1px 2px 0px black;
 }

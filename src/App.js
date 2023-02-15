@@ -1,12 +1,19 @@
 import './App.css';
 import React, { useState } from 'react';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import HomePage from './components/HomePage';
 
+import Dashboard from './components/Dashboard';
 function App(){
     return(
       <>
-      <Dashboard/>
+      <HomePage/>
+      {/* <Routes> */}
+        {/* <Switch> */}
+          {/* <Route path="/" component={Login}/> */}
+          {/* <Route path="/HomePage" component={HomePage}/> */}
+        {/* </Switch> */}
+      {/* </Routes> */}
       </>
     );
 }
