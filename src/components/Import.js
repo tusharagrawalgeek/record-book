@@ -2,6 +2,8 @@ import React from "react";
 import { useState } from "react";
 import '../style.css';
 import * as color from '../colors.js';
+import axios from "axios";
+import url from "../vars";
 function Import(){
     const [state,setState]=useState(
         {
@@ -36,6 +38,20 @@ function Import(){
     }
     function handleSubmit(){
         console.log(state);
+        const data={
+            name:state.itemName,
+            quantity:state.quantity,
+            date:state.dateAdded,
+            expiry:state.expiryDate,
+            description:state.description
+        }
+        axios.post(url+'/setitem',data)
+        .then(res=>{
+            console.log(res.data);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     }
     return(
         <>

@@ -8,25 +8,27 @@ import {
     Route,
     Routes,
     Redirect,
+    Outlet,
   } from "react-router-dom";
     function HomePage(){
     return(
         <>
-        <Router>
+        {/* <Router> */}
         <div className="container-bg">
                 <div className="left">
                     <SideBar/>
                 </div>
                 <div className="right">
-                    <Routes>
+                    {/* <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/import" element={<Import/>} />
                     
                     </Routes>
-                    
+                     */}
+                     <Outlet/>
                 </div>
             </div>
-            </Router>
+            {/* </Router> */}
         </>
     );
 }

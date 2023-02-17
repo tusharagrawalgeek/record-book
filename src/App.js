@@ -8,31 +8,38 @@ import {
   Redirect,
 } from "react-router-dom";
 import HomePage from './components/HomePage';
+import Dashboard from './components/Dashboard';
+import Import from './components/Import';
 function App(){
   const [state,setState]=useState(
     {
         authenticated:false
     }
-);
-function authorise(p){
-  console.log("Authentication changed to "+p);
-    setState(prev=>{
-        return({
-            ...prev,
-            authenticated:p
-        });
-    });
-}
+    );
+// function authorise(p){
+//   console.log("Authentication changed to "+p);
+//     setState(prev=>{
+//         return({
+//             ...prev,
+//             authenticated:p
+//         });
+//     });
+// }
     return(
       <>
-      {state.authenticated?<HomePage/>:<Login changeAuthentication={authorise}/>}
-      {/* <Router>
+      <Router>
         <Routes>
-        {!state.authenticated&&
-        <Route path="/" element={<Login changeAuthentication={authorise}/>} />
-      }</Routes>
-      </Router> */}
+        <Route path="/" element={<Login/>} />
+        {/* <Route path="/homepage" element={<HomePage/>}/> */}
+        <Route path="/home" element={<HomePage/>}>
+          <Route path="dashboard" element={<Dashboard/>}/>
+          <Route path="import" element={<Import/>}/>
+        </Route>
+        
+      </Routes>
+      </Router>
       {/* <Login/> */}
+      hey
       </>
     );
 }

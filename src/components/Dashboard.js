@@ -1,31 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import '../style.css';
 import * as color from '../colors.js';
+import axios from "axios";
+import url from '../vars.js';
 function Dashboard(){
-    const data=[
+   
+    const [state,setState]=useState(
         {
-            item:"biscuit",
-            quantity:"10",
-            added:"",
-            expiry:"",
-            description:""
-        },
-        {
-            item:"book",
-            quantity:"15",
-            added:"",
-            expiry:"",
-            description:""
-        },
-        {
-            item:"Box",
-            quantity:"17",
-            added:"",
-            expiry:"",
-            description:""
+            items:[]
         }
-    ];
+    );
+    useEffect(()=>{
+        console.log(url);
+        // const url='http://localhost:3001/getitem'
+        axios.get(url+'/getitem')
+        .then(res=>{
+            const items=res.data.data;
+            setState(p=>{
+                return({
+                    ...p,
+                    items:items
+                });
+            })
+        })
+        .catch(err=>console.log(err))
+    },[]);
     return(
         <>
         <div style={{
@@ -60,17 +60,18 @@ function Dashboard(){
                             Description
                         </th>
                     </tr>
-                    {data.map(i=>{
+                    {state.items.map(i=>{
                         return(
+                          
                             <tr>
                                <td className="td-1">
-                                {i.item.charAt(0).toUpperCase() + i.item.slice(1)}
+                                {i.name.charAt(0).toUpperCase() + i.name.slice(1)}
                                </td>
                                <td className="td-1">
                                 {i.quantity}
                                </td>
                                <td className="td-1">
-                                {i.added}
+                                {i.date}
                                </td>
                                <td className="td-1">
                                 {i.expiry}

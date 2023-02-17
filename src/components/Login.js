@@ -1,4 +1,4 @@
-import { Link } from "@mui/material";
+import { Link } from "react-router-dom";
 import React,{useState} from "react";
 import * as colors from "../colors.js";
 import '../style.css';
@@ -19,20 +19,20 @@ function Login(props){
         });
     }
     function handleSubmit(e){
-        e.preventDefault();
-        console.log(state.username,state.pswd);
-        if(state.username==="tushar"){
-            console.log("Username matched");
-            return props.changeAuthentication(true);
-        }
-        return props.changeAuthentication(false);
-
+        // e.preventDefault();
+        // console.log(state.username,state.pswd);
+        // if(state.username==="tushar"){
+        //     console.log("Username matched");
+        //     return props.changeAuthentication(true);
+        // }
+        // return props.changeAuthentication(false);
+        
     }
     return(
-        <>
+        <> 
             <div className="container">
-                <div className="form">
-                    <form onSubmit={handleSubmit}>
+                <div className="form" onSubmit={handleSubmit}>
+                    <form >
                         <input type="text"
                          className="input"
                          placeholder="Username"
@@ -47,11 +47,14 @@ function Login(props){
                          value={state.pswd}
                          onChange={handleChange}>
                         </input><br/>
+                        <Link to="/home/dashboard">
                         <button
                          className="btn-1" 
                          type="submit">
+                            {/* Login */}
                             Login
                         </button>
+                        </Link>
                     </form>
 
                 </div>
