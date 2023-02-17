@@ -4,7 +4,7 @@ import '../style.css';
 import * as color from '../colors.js';
 import axios from "axios";
 import url from '../vars.js';
-import { Checkbox } from "@mui/material";
+// import { Checkbox } from "@mui/material";
 function Delete(){
    
     const [state,setState]=useState(
