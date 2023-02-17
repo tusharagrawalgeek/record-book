@@ -32,7 +32,7 @@ function Dashboard(){
             width:"100%"
         }}>
             <div>
-                <h2 style={{marginTop:"0",color:color.contrast}}>DASHBOARD</h2>
+                <h2 style={{marginTop:"0",color:color.contrast}}>DASHBOARD </h2>
             </div>
             <div style={{
                 margin:"auto",
