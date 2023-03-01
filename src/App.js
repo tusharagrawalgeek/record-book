@@ -11,6 +11,7 @@ import HomePage from './components/HomePage';
 import Dashboard from './components/Dashboard';
 import Import from './components/Import';
 import Delete from './components/Delete';
+import Export from './components/Export';
 function App(){
   const [state,setState]=useState(
     {
@@ -36,6 +37,7 @@ function App(){
           <Route path="dashboard" element={<Dashboard/>}/>
           <Route path="import" element={<Import/>}/>
           <Route path="delete" element={<Delete/>}/>
+          <Route path="export" element={<Export/>}/>
         </Route>
         
       </Routes>

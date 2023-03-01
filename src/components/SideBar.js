@@ -41,11 +41,13 @@ function SideBar(){
                                 </Link>
                             </tr>
                             <tr >
+                            <Link to="/home/export">
                                 <td className={state.selectedOption==="export"?"tr-left-selected":"tr-left"}
                                 onClick={handleClick}
                                 name="export">
                                     Export
                                 </td>
+                                </Link>
                             </tr>
                             <tr >
                                 <Link to="/home/delete">

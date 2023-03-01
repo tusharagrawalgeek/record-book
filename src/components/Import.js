@@ -4,6 +4,7 @@ import '../style.css';
 import * as color from '../colors.js';
 import axios from "axios";
 import url from "../vars";
+import {ExcelRenderer, OutTable} from 'react-excel-renderer';
 function Import(){
     const [state,setState]=useState(
         {
@@ -11,15 +12,29 @@ function Import(){
             quantity:"",
             dateAdded:new Date().getDate()+" / "+(new Date().getMonth()+1)+" / "+new Date().getFullYear(),
             expiryDate:"",
-            description:""
+            description:"",
+            showBulkUpload:false,
+            colNames:[],
+            bulkData:[],
+            colOrder:[-1,-1,-1,-1,-1],
         }
     );
+    function handleOptionChange(e){
+        var obj=e.target;
+        state.colOrder[[obj.name]]=Number(obj.value);
+        setState(p=>{
+            return(
+                {
+                    ...p,
+                }
+            );
+        })
+    }
     function handleChange(e){
         var obj=e.target;
         if(obj.name==="expiryDate"){
             var value=obj.value;
             if(state.expiryDate.length===1){
-                console.log(obj.value);
                 value=value+" / ";
             }
             setState(p=>{
@@ -36,8 +51,8 @@ function Import(){
             });
         });
     }
-    function handleSubmit(){
-        console.log(state);
+    function handleSubmit(e){
+        if(e.target.getAttribute("name")==="singleAddButton"){
         const data={
             name:state.itemName,
             quantity:state.quantity,
@@ -52,9 +67,63 @@ function Import(){
         .catch(err=>{
             console.log(err);
         })
+        }
+        if(e.target.getAttribute("name")==="bulkAddButton"){
+            state.bulkData.map((i,ind)=>{
+                if(ind!==0){
+                const data={
+                    name:state.colOrder[0]===-1?"":i[state.colOrder[0]],
+                    quantity:state.colOrder[1]===-1?"":i[state.colOrder[1]],
+                    date:state.colOrder[2]===-1?state.dateAdded:i[state.colOrder[2]],
+                    expiry:state.colOrder[3]===-1?"":i[state.colOrder[3]],
+                    description:state.colOrder[4]===-1?"":i[state.colOrder[4]]
+                }
+                axios.post(url+'/setitem',data)
+                .then(res=>{
+                    console.log(res.data);
+                })
+                .catch(err=>{
+                    console.log(err);
+                })
+                console.log(data);
+            }
+            })
+        }
+    }
+    function handleClick(e){
+        var obj=e.target.getAttribute("name");
+        setState(p=>{
+            return({
+                ...p,
+                [obj]:!state.showBulkUpload
+            })
+        })
+        
+    }
+    function fileHandler (event){
+        let fileObj = event.target.files[0];
+        ExcelRenderer(fileObj, (err, resp) => {
+          if(err){
+            console.log(err);            
+          }
+          else{
+            console.log(resp.cols,resp.rows);
+            const data=resp.rows;
+            const colNames=data[0];
+            setState(p=>{
+                return(
+                    {
+                        ...p,
+                        colNames:colNames,
+                        bulkData:data
+                    }
+                );
+            });
+          }
+        });                  
     }
     return(
-        <>
+        <>  {console.log(state.colOrder)}
             <div style={{
             width:"100%"
             }}>
@@ -75,6 +144,8 @@ function Import(){
                         background:"#2E333C",
                         boxShadow:"1px 1px 2px 0px black"
                     }}>
+                    {!state.showBulkUpload?
+                    <>
                     <tr>
                         <td className="tditem">
 
@@ -84,6 +155,7 @@ function Import(){
                             :
                         </td>
                         <td className="tditem">
+                        
                         <input
                         className="inputitem"
                         name="itemName"
@@ -159,14 +231,139 @@ function Import(){
                     </tr>
                     <tr>
                         <td colSpan="3" className="td-add-btn">
-                            <button className="btn-add" onClick={handleSubmit}>Add</button>
+                            <button className="btn-add" onClick={handleSubmit} name="singleAddButton">Add</button>
                         </td>
                     </tr>
+                    </>
+                    :
+                    <>
+                    <>
+                    <tr>
+                        <td className="tditem">
+                        Select an excel file  
+                        </td>
+                        <td className="tditem">
+                            :
+                        </td>
+                        <td className="tditem">
+                        
+                        <input
+                        type="file"
+                        className="inputitem"
+                        id="fileUpload"
+                        // value={state.itemName}
+                        onChange={fileHandler}
+                        />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="tditem">
+                            ITEM NAME  
+                        </td>
+                        <td className="tditem">
+                            :
+                        </td>
+                        <td className="tditem">
+                        <select className="inputitem" style={{background:"#2E333C"}} onChange={handleOptionChange} name={0} id="itemNameOption">
+                            <option value={-1} >--Select column name--</option>
+                            {state.colNames.map((i,ind)=>{
+                                return(
+                                <option  value={ind}>{i}</option>
+                                );
+                            })}
+                            
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="tditem">
+                            QUANTITY  
+                        </td>
+                        <td className="tditem">
+                            :
+                        </td>
+                        <td className="tditem">
+                        <select className="inputitem" style={{background:"#2E333C"}} onChange={handleOptionChange} name={1} id="quantityOption">
+                            <option value={-1} >--Select column name--</option>
+                            {state.colNames.map((i,ind)=>{
+                                return(
+                                <option  value={ind}>{i}</option>
+                                );
+                            })}
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="tditem">
+                        DATE ADDED
+                        </td>
+                        <td className="tditem">
+                            :
+                        </td>
+                        <td className="tditem">
+                        <select className="inputitem" style={{background:"#2E333C"}} onChange={handleOptionChange} name={2} id="quantityOption">
+                            <option value={-1} >{state.dateAdded}</option>
+                            {state.colNames.map((i,ind)=>{
+                                return(
+                                <option  value={ind}>{i}</option>
+                                );
+                            })}
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="tditem">
+                            EXPIRY DATE
+                        </td>
+                        <td className="tditem">
+                            :
+                        </td>
+                        <td className="tditem">
+                        <select className="inputitem" style={{background:"#2E333C"}} onChange={handleOptionChange} name={3} id="quantityOption">
+                            <option value={-1} >--Select column name--</option>
+                            {state.colNames.map((i,ind)=>{
+                                return(
+                                <option  value={ind}>{i}</option>
+                                );
+                            })}
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td className="tditem">
+
+                             DESCRIPTION  
+                        </td>
+                        <td className="tditem">
+                            :
+                        </td>
+                        <td className="tditem">
+                        <select className="inputitem" style={{background:"#2E333C"}} onChange={handleOptionChange} name={4} id="quantityOption">
+                            <option value={-1} >--Select column name--</option>
+                            {state.colNames.map((i,ind)=>{
+                                return(
+                                <option  value={ind}>{i}</option>
+                                );
+                            })}
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colSpan="3" className="td-add-btn">
+                            <button className="btn-add" onClick={handleSubmit} name="bulkAddButton">Add Items</button>
+                        </td>
+                    </tr>
+                    </>
+                    </>}
                     </table>
                 </div>
+                {/* {!state.showBulkUpload&& */}
+                <>
                 <div style={{padding:"20px", width:"100%"}}> 
-                
+                <button name="showBulkUpload" onClick={handleClick}>{state.showBulkUpload?"Cancel":"Bulk Upload"}</button>
                 </div>
+                </> 
+                {/* } */}
             </div>
         </>
     );
