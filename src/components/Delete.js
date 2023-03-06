@@ -4,17 +4,49 @@ import '../style.css';
 import * as color from '../colors.js';
 import axios from "axios";
 import url from '../vars.js';
-// import { Checkbox } from "@mui/material";
+import Loader from './Loader.js';
+import Modal from './Modal';
 function Delete(){
    
     const [state,setState]=useState(
         {
             items:[],
-            cbdata:[]
+            cbdata:[],
+            showLoader:false
         }
     );
-    useEffect(()=>{
-        console.log(url);
+     useEffect(()=>{
+        if(state.showLoader){
+        console.log("delete started");
+        const promises=state.cbdata.map(async i=>{
+            await axios.delete(url+'/deleteitem/'+i)
+            .then(res=>{
+                console.log("removed"+i);
+                return new Promise((resolve,reject)=>{
+                    resolve(432);
+                    reject(-1);
+                })
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        })
+        console.log("Delete ended");
+        Promise.all(promises)
+            .then(()=>{
+                console.log(promises)
+                loadData();
+                setState(p=>({
+                    ...p,
+                    showLoader:false,
+                    cbdata:[]
+                }))
+                }
+            )
+            .catch(e=>console.log(e))
+        }
+    },[state.showLoader]);
+    function loadData(){
         axios.get(url+'/getitem')
         .then(res=>{
             const items=res.data.data;
@@ -26,6 +58,10 @@ function Delete(){
             })
         })
         .catch(err=>console.log(err))
+    }
+    useEffect(()=>{
+        console.log(url);
+        loadData();
     },[]);
     function handelCheckBox(e){
         const id=e.target.getAttribute("name");
@@ -48,64 +84,29 @@ function Delete(){
         
     }
     function handelSubmit(){
-        const statuscode=state.cbdata.map(i=>{
-            axios.delete(url+'/deleteitem/'+i)
-            .then(res=>{
-                console.log(res);
-                axios.get(url+'/getitem')
-                .then(res=>{
-                    const items=res.data.data;
-                    console.log(items);
-                    setState(p=>{
-                        return({
-                            ...p,
-                            cbdata:[],
-                            items:items
-                        });
-                    })
-                })
-                .catch(err=>console.log(err))
-            })
-            .catch(err=>{
-                console.log(err);
-            })
-        })
-        const data=statuscode.filter(i=>{
-            return i!==200;
-        })
-        console.log(data);
-        //getitems inside delete success only when all success codes return 200 
-        // setState(p=>{
-        //     return(
-        //         {
-        //             ...p,
-                    
-        //         }
-        //     );
-        // })
-        // setTimeout(() => {
-           
-        //   }, 3000);
-       
-        // useEffect();
+        setState(p=>({
+            ...p,
+            showLoader:!state.showLoader
+        }))
     }
     return(
         <>
-        {console.log(state.cbdata)}
+        {console.log("rerender")}
+        <Loader show={state.showLoader}/>
         <div style={{
             width:"100%"
         }}>
             <div>
-                <h2 style={{marginTop:"0",color:color.contrast}}>DASHBOARD</h2>
+                <h2 style={{marginTop:"0",color:color.contrast}}>DELETE ITEMS</h2>
             </div>
             <div style={{
                 margin:"auto",
-                marginTop:"4em"
+                marginTop:"4em",
             }}>
                 <table style={{
                     margin:"auto",
                     width:"70%",
-                    borderSpacing:"0"
+                    borderSpacing:"0",
                 }}>
                     <tr>
                     <th className="th">

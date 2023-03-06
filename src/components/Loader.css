@@ -1,0 +1,62 @@
+.loader{
+    position: absolute;
+    /* height: 100vh; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+      background: none;
+  }
+  /* Creating the dots */
+  .dot{
+    height: 25px;
+    width: 25px;
+    margin-right: 10px;
+    border-radius: 50%;
+    background-color: #00ADB5;
+    animation: loading 1s linear infinite;
+  }
+  /* Creating the loading animation*/
+  @keyframes loading {
+    0%{
+     transform: translateX(0);
+    }
+    25%{
+     transform: translateX(15px);
+    }
+    50%{
+     transform: translateX(-15px);
+    }
+    100%{
+     transform: translateX(0);
+    }
+      
+  }
+ .dot:nth-child(1){
+   animation-delay: 0.1s;
+ }
+ .dot:nth-child(2){
+   animation-delay: 0.2s;
+ }
+ .dot:nth-child(3){
+   animation-delay: 0.3s;
+ }
+ .dot:nth-child(4){
+   animation-delay: 0.4s;
+ }
+ .dot:nth-child(5){
+   animation-delay: 0.5s;
+ }
+ .modal{
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top:0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  border-radius: 5px;
+}

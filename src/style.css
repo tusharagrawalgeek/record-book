@@ -53,7 +53,8 @@
     vertical-align: top;
     padding: 2em;
     width: 80%;
-    position: fixed;
+    /* overflow-y: scroll; */
+    /* position: fixed; */
     /* height: 100%; */
 }
 .left{
