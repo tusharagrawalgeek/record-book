@@ -1,12 +1,36 @@
+import { useState } from "react";
+import * as colors from '../colors.js';
 function Table(props){
     return(
         <>
             <table style={{
                     margin:"auto",
                     width:"70%",
-                    borderSpacing:"0"
-                }}>
+                    borderSpacing:"0",
+                    boxShadow:"2px 2px 10px 1px black",
+                    padding:"20px",
+                    background:colors.mid,
+                    borderRadius:"10px",
+                    color:"white"
+                }}> {props.searchBar&&
                     <tr>
+                        <td colSpan={8}>
+                    <input 
+                         type="text"
+                         name="searchValue"
+                         className="searchbar"
+                         value={props.searchValue}
+                         placeholder="Search..."
+
+                         onChange={(e)=>props.handleChange(e)}
+                         />
+                    </td>
+                    </tr>
+                    }
+                    <tr>
+                    <th className="th">
+                            S.No.
+                        </th>
                     <th className="th">
                             Date
                         </th>
@@ -29,10 +53,12 @@ function Table(props){
                             Remarks
                         </th>
                     </tr>
-                    {props.items.map(i=>{
+                    {props.items.map((i,ind)=>{
                         return(
-                          
-                            <tr>
+                                <tr>
+                                <td className="td-1">
+                                {ind+1}
+                               </td>
                                 <td className="td-1">
                                 {i.date}
                                </td>

@@ -9,13 +9,15 @@ import Table from "./Table.js";
 import Loader from "./Loader";
 import { useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
+import searchQuery from "./searchQuery";
+import Modal from './Modal';
 function Import(){
     const comp=useRef();
     const [state,setState]=useState(
-        {
+        {   
+            dateAdded:new Date().getDate()+" / "+(new Date().getMonth()+1)+" / "+new Date().getFullYear(),
             itemName:"",
             quantity:"",
-            dateAdded:new Date().getDate()+" / "+(new Date().getMonth()+1)+" / "+new Date().getFullYear(),
             expiryDate:"",
             description:"",
             receivedFrom:"",
@@ -26,11 +28,50 @@ function Import(){
             colOrder:[-1,-1,-1,-1,-1,-1,-1],
             showLoader:false,
             importedItems:[],
+            searchItems:[],
             showSingleUpload:false,
             showBulkUpload:false,
-            showImportedTable:true
+            showImportedTable:true,
+            searchValue:"",
+            showModal:false,
+            message:"",
+            messageVariant:"",
+            strength:""
         }
     );
+    async function addBulkItems(){
+        const promises=state.bulkData.map((i,ind)=>{
+            var promise=new Promise(async(resolve,reject)=>{
+            if(ind!==0){
+            const data={
+                date:state.colOrder[0]===-1?state.dateAdded:i[state.colOrder[0]],
+                name:state.colOrder[1]===-1?"":i[state.colOrder[1]],
+                receivedFrom:state.colOrder[2]===-1?"":i[state.colOrder[2]],
+                quantity:state.colOrder[3]===-1?"":i[state.colOrder[3]],
+                receivedBy:state.colOrder[4]===-1?"":i[state.colOrder[4]],
+                expiry:state.colOrder[5]===-1?"":i[state.colOrder[5]],
+                description:state.colOrder[6]===-1?"":i[state.colOrder[6]]
+                
+            }
+            await axios.post(url+'/setitem',data)
+            .then(res=>{
+                console.log(res.data);
+                resolve("Added all the data");
+            })
+            .catch(err=>{
+                console.log(err);
+                reject("Could not add successfully");
+            })
+        // }
+        }else{
+            console.log("here ");
+            resolve("Added all the data");
+        }
+        })
+        return promise;
+        })
+        return promises;
+    }
     async function addSingleItem(){
          const data={
             name:state.itemName,
@@ -41,32 +82,103 @@ function Import(){
             receivedBy:state.receivedBy,
             receivedFrom:state.receivedFrom
         }
-        var promise=await axios.post(url+'/setitem',data)
+        var promise=new Promise(async(resolve,reject)=>{
+        await axios.post(url+'/setitem',data)
         .then(res=>{
-            console.log(res.data);
-            console.log(res.data+"added");
-            return new Promise((resolve,reject)=>{
-                 resolve(432);
-                 reject(-1)
-            })
+            console.log(res);
+            resolve("Added successfully")
         })
         .catch(err=>{
-            console.log(err);
+            console.log(data);
+            reject("Could not add due to "+err);
         })
+        });
         return promise;
     }
     useEffect(()=>{
-        if(state.showLoader){
+        if(state.strength==="single"){
         addSingleItem()
         .then(val=>{
             console.log(val);
             setState(p=>({
                 ...p,
-                showLoader:false
+                showLoader:false,
+                showModal:true,
+                message:val,
+                strength:false,
+                messageVariant:"success",
+                itemName:"",
+                        quantity:"",
+                        expiryDate:"",
+                        description:"",
+                        receivedFrom:"",
+                        receivedBy:"",
+            }))
+        })
+        .catch(err=>{
+            console.log(err);
+            setState(p=>({
+                ...p,
+                showLoader:false,
+                showModal:true,
+                message:err,
+                strength:false,
+                messageVariant:"error"
             }))
         })
         }
-    },[state.showLoader]);
+        if(state.strength==="bulk"){
+            const allpromises=addBulkItems()
+            allpromises
+            .then((x)=>{
+                console.log(x);
+                  setState(p=>({
+                    ...p,
+                    showLoader:false,
+                    showModal:true,
+                    message:"Added all the data",
+                    strength:"",
+                    messageVariant:"success",
+                    colNames:[],
+            bulkData:[],
+            colOrder:[-1,-1,-1,-1,-1,-1,-1],
+                }))
+            })
+            .catch(err=>{
+                // console.log(err);
+                setState(p=>({
+                    ...p,
+                    showLoader:false,
+                    showModal:true,
+                    message:"Could not add items",
+                    strength:"",
+                    messageVariant:"error"
+                }))
+            })
+            }
+    },[state.strength]);
+    useEffect(()=>{
+        if(state.showModal){
+            setTimeout(()=>{
+                setState(p=>(
+                    {
+                        ...p,
+                        showModal:false,
+                        message:"",
+                        messageVariant:"",
+                    }
+                ))
+            },3000)
+        }
+    },[state.showModal])
+    function closeModalCallback(){
+        console.log("Callback");
+        setState(p=>({
+            ...p,
+            showModal:false,
+            message:"",
+            messageVariant:""}))
+    }
     const handlePrint=useReactToPrint({
         onBeforeGetContent:()=>{
             setState(p=>(
@@ -86,7 +198,8 @@ function Import(){
             setState(p=>(
                 {
                     ...p,
-                    importedItems:res.data.data
+                    importedItems:res.data.data,
+                    searchItems:res.data.data
                 }
             ))
         })
@@ -107,6 +220,8 @@ function Import(){
     }
     function handleChange(e){
         var obj=e.target;
+
+        console.log("hre");
         if(obj.name==="expiryDate"){
             var value=obj.value;
             if(state.expiryDate.length===1){
@@ -116,6 +231,15 @@ function Import(){
                 return({
                     ...p,
                     [obj.name]:value
+                });
+            });
+        }else if(obj.name==="searchValue"){
+            const data=searchQuery(obj.value,state.importedItems);
+            setState(p=>{
+                return({
+                    ...p,
+                    searchItems:data,
+                    [obj.name]:obj.value
                 });
             });
         }else
@@ -130,43 +254,40 @@ function Import(){
         if(e.target.getAttribute("name")==="singleAddButton"){
             setState(p=>({
                 ...p,
+                strength:"single",
                 showLoader:true
             }))
             return
         }
         if(e.target.getAttribute("name")==="bulkAddButton"){
-            state.bulkData.map((i,ind)=>{
-            if(ind!==0){
-            const data={
-                date:state.colOrder[0]===-1?state.dateAdded:i[state.colOrder[0]],
-                name:state.colOrder[1]===-1?"":i[state.colOrder[1]],
-                receivedFrom:state.colOrder[2]===-1?"":i[state.colOrder[2]],
-                quantity:state.colOrder[3]===-1?"":i[state.colOrder[3]],
-                receivedBy:state.colOrder[4]===-1?"":i[state.colOrder[4]],
-                expiry:state.colOrder[5]===-1?"":i[state.colOrder[5]],
-                description:state.colOrder[6]===-1?"":i[state.colOrder[6]]
-                
-            }
-            axios.post(url+'/setitem',data)
-            .then(res=>{
-                console.log(res.data);
-            })
-            .catch(err=>{
-                console.log(err);
-            })
-            console.log(data);
-        }
-        })
+            setState(p=>({
+                ...p,
+                strength:"bulk",
+                showLoader:true
+            }))
+            return
         }
     }
     function handleClick(e){
         var obj=e.target.getAttribute("name");
         var arr={showSingleUpload:false,showBulkUpload:false,showImportedTable:false}
+        loadImportedItems()
         setState(p=>{
             return({
                 ...p,
                 ...arr,
-                [obj]:!state[obj]
+                [obj]:!state[obj],
+                itemName:"",
+            quantity:"",
+            expiryDate:"",
+            description:"",
+            receivedFrom:"",
+            receivedBy:"",
+            content:"",
+            colNames:[],
+            bulkData:[],
+            colOrder:[-1,-1,-1,-1,-1,-1,-1],
+            searchValue:""
             })
         })
         
@@ -196,6 +317,7 @@ function Import(){
     return(
         <> 
             <Loader show={state.showLoader}/>
+            <Modal message={state.message} type={state.messageVariant} show={state.showModal} closeCallback={closeModalCallback}/>
             <div style={{
             width:"100%"
             }}>
@@ -220,10 +342,18 @@ function Import(){
                 }}>
                     {state.showImportedTable?
                     <>  
-                        <div ref={comp}>
-                        <Table items={state.importedItems}/>
-                        </div>
+                        <div ref={comp} style={{textAlign:"center"}}>                         
+                        <Table items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange} searchBar/>
+                        <div className="singlebar">
+                        {state.showImportedTable&&
+                            <button name="" style={{float:"",marginRight:"40rem"}} className="btn-add1" onClick={handlePrint}>Print</button>
+                        }
+                        {state.showImportedTable&&
+                            <button style={{float:""}} className="btn-add1" name="showSingleUpload" onClick={handleClick}>Upload items</button>
+                        }   
                         
+                        </div>
+                        </div>
                     </>
                     :
                     <table style={{
@@ -528,19 +658,12 @@ function Import(){
                 }
                 </div>
                 <>
-                {state.showImportedTable&&
-                <div style={{padding:"20px", width:"100%"}}> 
-                    <button name="showSingleUpload" onClick={handleClick}>Upload items</button>
-                </div>
-                }
+                
                 {state.showSingleUpload&&
                 <div style={{padding:"20px", width:"100%"}}> 
-                <button name="showBulkUpload" onClick={handleClick}>Bulk Upload Items</button>
+                <button name="showBulkUpload" className="btn-add" onClick={handleClick}>Bulk Upload Items</button>
                 </div>
                 }
-                <div style={{padding:"20px", width:"100%"}}> 
-                <button name="" onClick={handlePrint}>Print</button>
-                </div>
                 </> 
             </div>
             {console.log("Exited the function")}

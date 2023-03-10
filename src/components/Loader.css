@@ -1,3 +1,6 @@
+:root{
+  --contrast:#00ADB5;
+}
 .loader{
     position: absolute;
     /* height: 100vh; */
@@ -14,7 +17,7 @@
     width: 25px;
     margin-right: 10px;
     border-radius: 50%;
-    background-color: #00ADB5;
+    background-color: var(--contrast);
     animation: loading 1s linear infinite;
   }
   /* Creating the loading animation*/

@@ -5,31 +5,35 @@ import * as color from '../colors.js';
 import axios from "axios";
 import url from '../vars.js';
 import Loader from './Loader.js';
-import Modal from './Modal';
+import Modal from './Modal';    
 function Delete(){
    
     const [state,setState]=useState(
         {
             items:[],
             cbdata:[],
-            showLoader:false
+            showLoader:false,
+            showModal:false,
+            message:"",
+            messageVariant:""
         }
     );
      useEffect(()=>{
         if(state.showLoader){
         console.log("delete started");
-        const promises=state.cbdata.map(async i=>{
+        const promises=state.cbdata.map(i=>{
+            var promise=new Promise(async(resolve,reject)=>{
             await axios.delete(url+'/deleteitem/'+i)
             .then(res=>{
                 console.log("removed"+i);
-                return new Promise((resolve,reject)=>{
-                    resolve(432);
-                    reject(-1);
-                })
+                resolve("Done")
             })
             .catch(err=>{
                 console.log(err);
+                reject("bad");
             })
+            })
+            return promise;
         })
         console.log("Delete ended");
         Promise.all(promises)
@@ -39,13 +43,41 @@ function Delete(){
                 setState(p=>({
                     ...p,
                     showLoader:false,
+                    showModal:true,
+                    message:"Deleted successfully",
+                    messageVariant:"success",
                     cbdata:[]
                 }))
                 }
             )
-            .catch(e=>console.log(e))
+            .catch(e=>{
+                loadData();
+                setState(p=>({
+                    ...p,
+                    showLoader:false,
+                    showModal:true,
+                    message:"Could not delete",
+                    messageVariant:"error",
+                    // cbdata:[]
+                }))
+            })
         }
     },[state.showLoader]);
+    useEffect(()=>{
+        if(state.showModal){
+            setTimeout(()=>{
+                setState(p=>(
+                    {
+                        ...p,
+                        showModal:false,
+                        message:"",
+                        messageVariant:""
+                    }
+                ))
+            },3000)
+            
+        }
+    },[state.showModal])
     function loadData(){
         axios.get(url+'/getitem')
         .then(res=>{
@@ -89,10 +121,19 @@ function Delete(){
             showLoader:!state.showLoader
         }))
     }
+    function closeModalCallback(){
+        console.log("Callback");
+        setState(p=>({
+            ...p,
+            showModal:false,
+            message:"",
+            messageVariant:""}))
+    }
     return(
         <>
         {console.log("rerender")}
         <Loader show={state.showLoader}/>
+        <Modal message={state.message} type={state.messageVariant} show={state.showModal} closeCallback={closeModalCallback}/>
         <div style={{
             width:"100%"
         }}>

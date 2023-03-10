@@ -30,7 +30,7 @@ function Modal(props){
                   props.type==="warning"?"modal-content-warning":
                   props.type==="error"?"modal-content-error":
                                         "modal-content-primary"}>
-    <span className="close" onClick={close}>&times;</span>
+    <span className="close" onClick={()=>props.closeCallback()}>&times;</span>
     <p>{props.message}</p>
   </div>
 
