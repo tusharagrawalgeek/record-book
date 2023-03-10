@@ -6,13 +6,28 @@ import axios from "axios";
 import url from '../vars.js';
 import Table from "./Table";
 // import Loader from "./Loader";
+import searchQuery from "./searchQuery";
 function Dashboard(){
    
     const [state,setState]=useState(
         {
-            items:[]
+            items:[],
+            searchValue:"",
+            searchItems:[]
         }
     );
+    function handleChange(e){
+        const obj=e.target;
+        const data=searchQuery(obj.value,state.items);
+        setState(p=>(
+            {
+                ...p,
+                // searchValue:obj.value,
+                searchItems:data,
+                [obj.name]:[obj.value]
+            }
+        ))
+    }
     useEffect(()=>{
         console.log(url);
         // const url='http://localhost:3001/getitem'
@@ -22,7 +37,8 @@ function Dashboard(){
             setState(p=>{
                 return({
                     ...p,
-                    items:items
+                    items:items,
+                    searchItems:items
                 });
             })
         })
@@ -41,7 +57,7 @@ function Dashboard(){
                 margin:"auto",
                 marginTop:"4em"
             }}>
-                <Table items={state.items}/>
+                <Table items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange}  searchBar/>
             </div>
         </div>
         </>

@@ -29,7 +29,8 @@ function Import(){
             showLoader:false,
             importedItems:[],
             searchItems:[],
-            showSingleUpload:false,
+            showSingleUpload1:false,
+            showSingleUpload2:false,
             showBulkUpload:false,
             showImportedTable:true,
             searchValue:"",
@@ -111,8 +112,8 @@ function Import(){
                         quantity:"",
                         expiryDate:"",
                         description:"",
-                        receivedFrom:"",
-                        receivedBy:"",
+                        // receivedFrom:"",
+                        // receivedBy:"",
             }))
         })
         .catch(err=>{
@@ -267,10 +268,22 @@ function Import(){
             }))
             return
         }
+
+    }
+    function proceedButton(){
+        // var obj=e.target.getAttribute("name");
+        var arr={showSingleUpload1:false,showSingleUpload2:false,showBulkUpload:false,showImportedTable:false}
+        setState(p=>(
+            {
+                ...p,
+                ...arr,
+                showSingleUpload2:true
+            }
+        ))
     }
     function handleClick(e){
         var obj=e.target.getAttribute("name");
-        var arr={showSingleUpload:false,showBulkUpload:false,showImportedTable:false}
+        var arr={showSingleUpload1:false,showSingleUpload2:false,showBulkUpload:false,showImportedTable:false}
         loadImportedItems()
         setState(p=>{
             return({
@@ -324,13 +337,14 @@ function Import(){
                 <div>
                     <h2 style={{marginTop:"0",color:color.contrast, marginBottom:"0"}}>
                         {state.showImportedTable?"IMPORTED ITEMS":
-                         state.showSingleUpload?"ADD SINGLE ITEM":
+                         state.showSingleUpload1?"ADD SINGLE ITEM":
+                         state.showSingleUpload2?"ADD SINGLE ITEM":
                          "BULK UPLOAD ITEMS"}
                     </h2>
                     <text style={{fontSize:".8em"}}>
                     <em>{state.showImportedTable?
                     "Here you can see the items imported in the past 30 days even if they are not in the inventory currently. Items after 30 days are automatically removed":
-                    state.showSingleUpload?"Fill the details and the item will be added instantly to the inventory. To upload many items at once, go to Bulk Upload Items":
+                    state.showSingleUpload1||state.showSingleUpload2?"Fill the details and the item will be added instantly to the inventory. To upload many items at once, go to Bulk Upload Items":
                     "Insert an excel file from your system and choose the column name from dropdown which corresponds to the actual columns"}
                     </em>
                     </text>
@@ -349,7 +363,7 @@ function Import(){
                             <button name="" style={{float:"",marginRight:"40rem"}} className="btn-add1" onClick={handlePrint}>Print</button>
                         }
                         {state.showImportedTable&&
-                            <button style={{float:""}} className="btn-add1" name="showSingleUpload" onClick={handleClick}>Upload items</button>
+                            <button style={{float:""}} className="btn-add1" name="showSingleUpload1" onClick={handleClick}>Upload items</button>
                         }   
                         
                         </div>
@@ -368,135 +382,20 @@ function Import(){
                     <tr>
                         <td colSpan="3" style={{textAlign:"right",paddingRight:"10px"}}>
                             <button className="btn-add" style={{color:"grey"}}
-                                name={state.showBulkUpload?"showSingleUpload":"showImportedTable"}
+                                name={state.showBulkUpload?"showSingleUpload1":"showImportedTable"}
                                 onClick={handleClick}    
                             >
                                 X
                             </button>
                         </td>
                     </tr>
-                    {state.showSingleUpload?
+                    {state.showSingleUpload1?
                     <>
-                    <tr>
-                        <td className="tditem">
-                        DATE
-                        </td>
-                        <td className="tditem">
-                            :
-                        </td>
-                        <td className="tditem">
-                        <input
-                        className="inputitem"
-                        name="dateAdded"
-                        value={state.dateAdded}
-                        onChange={handleChange}
-                        readOnly/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="tditem">
-
-                            PARTICULAR 
-                        </td>
-                        <td className="tditem">
-                            :
-                        </td>
-                        <td className="tditem">
-                        
-                        <input
-                        className="inputitem"
-                        name="itemName"
-                        value={state.itemName}
-                        onChange={handleChange}
-                        />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="tditem">
-                        RECEIVED FROM
-                        </td>
-                        <td className="tditem">
-                            :
-                        </td>
-                        <td className="tditem">
-                        <input
-                        className="inputitem"
-                        name="receivedFrom"
-                        value={state.receivedFrom}
-                        onChange={handleChange}
-                        />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="tditem">
-                            QUANTITY  
-                        </td>
-                        <td className="tditem">
-                            :
-                        </td>
-                        <td className="tditem">
-                        <input
-                        className="inputitem"
-                        name="quantity"
-                        value={state.quantity}
-                        onChange={handleChange}
-                        />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="tditem">
-                        RECEIVED BY
-                        </td>
-                        <td className="tditem">
-                            :
-                        </td>
-                        <td className="tditem">
-                        <input
-                        className="inputitem"
-                        name="receivedBy"
-                        value={state.receivedBy}
-                        onChange={handleChange}
-                        />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="tditem">
-                            EXPIRY DATE
-                        </td>
-                        <td className="tditem">
-                            :
-                        </td>
-                        <td className="tditem">
-                        <input 
-                        className="inputitem"
-                        name="expiryDate"
-                        value={state.expiryDate}
-                        onChange={handleChange}
-                        />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="tditem">
-
-                             REMARKS  
-                        </td>
-                        <td className="tditem">
-                            :
-                        </td>
-                        <td className="tditem">
-                        <input
-                        className="inputitem"
-                        name="description"
-                        value={state.description}
-                        onChange={handleChange}
-                        />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colSpan="3" className="td-add-btn">
-                            <button className="btn-add" onClick={handleSubmit} name="singleAddButton">Add</button>
-                        </td>
-                    </tr>
+                        {preEntryForm()}
+                    </>
+                    :state.showSingleUpload2?
+                    <>
+                        {entryForm()}
                     </>
                     :
                     <>
@@ -659,7 +558,7 @@ function Import(){
                 </div>
                 <>
                 
-                {state.showSingleUpload&&
+                {state.showSingleUpload1&&
                 <div style={{padding:"20px", width:"100%"}}> 
                 <button name="showBulkUpload" className="btn-add" onClick={handleClick}>Bulk Upload Items</button>
                 </div>
@@ -669,5 +568,152 @@ function Import(){
             {console.log("Exited the function")}
         </>
     );
+    function entryForm(){
+        return(
+            <>
+                        <tr>
+                            <td colSpan={3}>
+                                <h2 style={{padding:"0"}}>
+                                    Received from 
+                                {" "+state.receivedFrom}
+                                </h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="tditem">
+    
+                                PARTICULAR 
+                            </td>
+                            <td className="tditem">
+                                :
+                            </td>
+                            <td className="tditem">
+                            
+                            <input
+                            className="inputitem"
+                            name="itemName"
+                            value={state.itemName}
+                            onChange={handleChange}
+                            />
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td className="tditem">
+                                QUANTITY  
+                            </td>
+                            <td className="tditem">
+                                :
+                            </td>
+                            <td className="tditem">
+                            <input
+                            className="inputitem"
+                            name="quantity"
+                            value={state.quantity}
+                            onChange={handleChange}
+                            />
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td className="tditem">
+                                EXPIRY DATE
+                            </td>
+                            <td className="tditem">
+                                :
+                            </td>
+                            <td className="tditem">
+                            <input 
+                            className="inputitem"
+                            name="expiryDate"
+                            value={state.expiryDate}
+                            onChange={handleChange}
+                            />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="tditem">
+    
+                                 REMARKS  
+                            </td>
+                            <td className="tditem">
+                                :
+                            </td>
+                            <td className="tditem">
+                            <input
+                            className="inputitem"
+                            name="description"
+                            value={state.description}
+                            onChange={handleChange}
+                            />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan="3" className="td-add-btn">
+                                <button className="btn-add" onClick={handleSubmit} name="singleAddButton">Add</button>
+                            </td>
+                        </tr>
+            </>
+        );
+    }
+    function preEntryForm(){
+        return(
+            <>
+                <tr>
+                            <td className="tditem">
+                            DATE
+                            </td>
+                            <td className="tditem">
+                                :
+                            </td>
+                            <td className="tditem">
+                            <input
+                            className="inputitem"
+                            name="dateAdded"
+                            value={state.dateAdded}
+                            onChange={handleChange}
+                            readOnly/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="tditem">
+                            RECEIVED FROM
+                            </td>
+                            <td className="tditem">
+                                :
+                            </td>
+                            <td className="tditem">
+                            <input
+                            className="inputitem"
+                            name="receivedFrom"
+                            value={state.receivedFrom}
+                            onChange={handleChange}
+                            />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td className="tditem">
+                            RECEIVED BY
+                            </td>
+                            <td className="tditem">
+                                :
+                            </td>
+                            <td className="tditem">
+                            <input
+                            className="inputitem"
+                            name="receivedBy"
+                            value={state.receivedBy}
+                            onChange={handleChange}
+                            />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan="3" className="td-add-btn">
+                                <button className="btn-add" onClick={proceedButton} name="showSingleUpload2">Proceed</button>
+                            </td>
+                        </tr>
+            </>
+        );
+    }
 }
 export default Import;
