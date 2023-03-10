@@ -213,6 +213,7 @@ function Export(){
         data.receivedBy=item.receivedBy
         data.receivedFrom=item.receivedFrom
         data.exportedTo=state.exportedTo
+        data.purpose=state.purpose
         console.log(data);
         var p=new Promise(async(resolve,reject)=>{
         await axios.post(url+'/exportitem',data)
@@ -290,52 +291,58 @@ function Export(){
                     }}>
                     <tr>
                     <th className="th">
-                            Date
+                            S.No.
+                        </th>
+                    <th className="th">
+                           Export Date
                         </th>
                         <th className="th">
                             Particular
                         </th>
+                        
                         <th className="th">
-                            Received From
+                            Quantity
                         </th>
-                        <th className="th">
-                            Quantiity
-                        </th>
-                        <th className="th">
-                            Received By
-                        </th>
+                        
                         <th className="th">
                             Expiry Date
                         </th>
                         <th className="th">
-                            Remarks
+                            Exported to
                         </th>
+                        <th className="th">
+                            Purpose
+                        </th>
+                        
                     </tr>
-                    {state.exportedItems.map(i=>{
+                    {state.exportedItems.map((i,ind)=>{
                         return(
                           
                             <tr>
+                                 <td className="td-1">
+                                {ind+1}
+                               </td>
                                 <td className="td-1">
                                 {i.date}
                                </td>
                                <td className="td-1">
                                 {i.name.charAt(0).toUpperCase() + i.name.slice(1)}
                                </td>
-                               <td className="td-1">
-                                {i.receivedFrom}
-                               </td>
+                               
                                <td className="td-1">
                                 {i.quantity}
                                </td>
-                               <td className="td-1">
-                                {i.receivedBy}
-                               </td>
+                               
                                <td className="td-1">
                                 {i.expiry}
                                </td>
                                <td className="td-1">
-                                {i.description}
+                                {i.exportedTo}
                                </td>
+                               <td className="td-1">
+                                {i.purpose}
+                               </td>
+                               
                             </tr>
                         );
                     })}
