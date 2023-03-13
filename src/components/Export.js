@@ -6,6 +6,8 @@ import axios from "axios";
 import url from '../vars.js';
 import Loader from './Loader.js';
 import Modal from './Modal.js';
+import ExportedTable from "./ExportedTable";
+import searchQuery from "./searchQuery";
 function Export(){
     const [state,setState]=useState(
         {   dateExported:new Date().getDate()+" / "+(new Date().getMonth()+1)+" / "+new Date().getFullYear(),
@@ -24,7 +26,10 @@ function Export(){
             message:"",
             messageVariant:"",
             showLoader:false,
-            startExport:false
+            startExport:false,
+            selectValues:[],
+            searchValue:"",
+            searchItems:[]
         }
     );
     useEffect(()=>{
@@ -97,6 +102,17 @@ function Export(){
     }
     function handleChange(e){
         const obj=e.target;
+        if(obj.name==="searchValue"){
+            const data=searchQuery(obj.value,state.exportedItems);
+            setState(p=>{
+                return({
+                    ...p,
+                    searchItems:data,
+                    [obj.name]:obj.value
+                });
+            });
+        }else{
+        
         console.log(obj.name);
         setState(p=>(
             {
@@ -104,9 +120,11 @@ function Export(){
                 [obj.name]:obj.value
             }
         ))
-
+        }
     }
     function handleAddItem(){
+
+        state.id.push("")
         state.quantity.push(0)
         setState(p=>({
             ...p,
@@ -150,6 +168,7 @@ function Export(){
         const i=e.target.getAttribute("name");
         state.quantity.splice([i],1);
         state.id.splice([i],1);
+        state.selectValues.splice([i],1);
         setState(p=>({
             ...p,
             exportItemCount:state.exportItemCount-1
@@ -169,20 +188,15 @@ function Export(){
             }   
             return false;   
         }))
-        // state.id[]
-        // var quantity=state.quantity[i]=item.quantity;
         state.id[[i]]=item._id;
         state.quantity[[i]]=item.quantity
-        // state.quantity[[i]]=item.quantity
-        // var quantity=state.quantity;
-        // quantity[i]=item.quantity;
+        state.selectValues[[i]]=item.name
         console.log(item,i);
         setState(p=>(
             {
                 ...p,
-                // quantity:quantity,
                 particular:item.name,
-                // quantity:item.quantity,
+            
             }
         ));
 
@@ -270,6 +284,7 @@ function Export(){
     }
     return(
         <>
+        {console.log(state.id,state.quantity)}
         <Modal message={state.message} type={state.messageVariant} closeCallback={closeModalCallback} show={state.showModal}/>
         <Loader show={state.showLoader}/>
         <div style={{
@@ -284,72 +299,22 @@ function Export(){
             }}>
                 {state.showExportedItems&&
                 <>
-                <table style={{
+                <ExportedTable items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange} searchBar/>
+                <div style={{
                     margin:"auto",
-                    width:"70%",
-                    borderSpacing:"0"
-                    }}>
-                    <tr>
-                    <th className="th">
-                            S.No.
-                        </th>
-                    <th className="th">
-                           Export Date
-                        </th>
-                        <th className="th">
-                            Particular
-                        </th>
-                        
-                        <th className="th">
-                            Quantity
-                        </th>
-                        
-                        <th className="th">
-                            Expiry Date
-                        </th>
-                        <th className="th">
-                            Exported to
-                        </th>
-                        <th className="th">
-                            Purpose
-                        </th>
-                        
-                    </tr>
-                    {state.exportedItems.map((i,ind)=>{
-                        return(
-                          
-                            <tr>
-                                 <td className="td-1">
-                                {ind+1}
-                               </td>
-                                <td className="td-1">
-                                {i.date}
-                               </td>
-                               <td className="td-1">
-                                {i.name.charAt(0).toUpperCase() + i.name.slice(1)}
-                               </td>
-                               
-                               <td className="td-1">
-                                {i.quantity}
-                               </td>
-                               
-                               <td className="td-1">
-                                {i.expiry}
-                               </td>
-                               <td className="td-1">
-                                {i.exportedTo}
-                               </td>
-                               <td className="td-1">
-                                {i.purpose}
-                               </td>
-                               
-                            </tr>
-                        );
-                    })}
-                </table>
-                <button onClick={handleClick} name="showExportForm1">
+                    marginTop:"2em",
+                    textAlign:"center"
+                }}>
+                    <div className="singleBar">
+                    <button  style={{float:"",marginRight:"30rem"}} className="btn-add1">
+                Print
+                </button>
+                <button  style={{float:""}} className="btn-add1" onClick={handleClick} name="showExportForm1">
                 Export items
                 </button>
+                
+                </div>
+                </div>
                 </>
                 }
                 {state.showExportForm1&&
@@ -395,14 +360,18 @@ function showFullForm(){
                             <>
                             <tr >
                         <td className="td-1">
+                            {index===state.exportItemCount-1?
                             <select className="select" onChange={handleOptionChange} name="particular">
-                                <option style={{background:color.dark}} >Select</option>
+                                <option style={{background:color.dark}} selected disabled hidden>Select</option>
                                 {state.currentItems.map((i,ind)=>{
                                     return(
-                                        <option style={{background:color.dark}} value={i._id+" "+index}>{i.name}</option>
+                                        <option style={{background:color.dark}} value={i._id+" "+index} disabled={state.id.includes(i._id)}>{i.name}</option>
                                     );
                                 })}
                             </select>
+                            :
+                             state.selectValues[index]
+                            }
                         </td>
                         <td className="td-1">
                             <input className="inputitem" value={state.quantity[index]} name={index} onChange={handleQuantityChange}/>
@@ -411,11 +380,11 @@ function showFullForm(){
                             hgbf
                         </td>
                         <td className="td-1">
-                        <button className="btn-add" style={{color:"grey"}}
+                        <button className="btn-add" 
                                 name={index}
                                 onClick={handleDeleteRow}    
                             >
-                                X
+                                x
                                 </button>
                         </td>
                     </tr>
@@ -429,11 +398,11 @@ function showFullForm(){
                             <button className="btn-add" onClick={handleClick} name="showExportForm1">Cancel</button>
                         </td>
                         <td colSpan="3" className="td-add-btn">
-                            <button className="btn-add"  onClick={handleAddItem} name="addItem">+</button>
+                            <button className="btn-add-d" onClick={handleAddItem} name="addItem" disabled={state.exportItemCount>state.selectValues.length}>+</button>
                         </td>
                     </tr>
                     </table>
-                    <button onClick={handleSubmit}>Export</button>
+                    <button  className="btn-add-d" onClick={handleSubmit} disabled={state.exportItemCount>state.selectValues.length}>Export</button>
         </>
     );
 }
@@ -451,7 +420,7 @@ function showPreForm(){
                     }}>
                     <tr>
                         <td colSpan="3" style={{textAlign:"right",paddingRight:"10px"}}>
-                            <button className="btn-add" style={{color:"grey"}}
+                            <button className="btn-add"
                                 name="showExportedItems"
                                 onClick={handleClick}    
                             >

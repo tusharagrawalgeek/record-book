@@ -350,7 +350,6 @@ function Import(){
                     </text>
                 </div>
                 <div style={{
-                    // background:"red",
                     margin:"auto",
                     marginTop:"4em"
                 }}>

@@ -1,6 +1,7 @@
 function searchQuery(str,arr){
     var cols=[]
     Object.keys(arr[0]).forEach((key) => cols.push(key));
+    console.log(arr);
     var res=[]
     arr.map(i=>{
         cols.some((j,ind)=>{

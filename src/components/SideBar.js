@@ -2,10 +2,11 @@ import React from "react";
 import { useState } from "react";
 import '../style.css';
 import { Link } from "react-router-dom";
+import getSelectedOption from "../functions/getSelectedOption";
 function SideBar(){
     const [state,setState]=useState(
         {
-            selectedOption:"dashboard"
+            selectedOption:getSelectedOption()
         }
     );
     function handleClick(e){
@@ -17,6 +18,7 @@ function SideBar(){
     console.log(state.selectedOption);
     return(
         <>
+        {console.log(window.location.href)}
             <div className="table-container">
                         <table style={{
                             margin:"0 auto",
