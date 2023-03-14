@@ -349,15 +349,20 @@ function Import(){
                     </em>
                     </text>
                 </div>
-                <div style={{
+                <div  name="contain" style={{
                     margin:"auto",
-                    marginTop:"4em"
+                    marginTop:"1em",
+                   
                 }}>
                     {state.showImportedTable?
                     <>  
-                        <div ref={comp} style={{textAlign:"center"}}>                         
-                        <Table items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange} searchBar/>
+                        <div ref={comp} style={{display:"none"}}>
+                            Table here
+                        </div>
+                        <div name="container" style={{textAlign:"center",display:"block"}}>                         
+                        
                         <div className="singlebar">
+                        <Table items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange} searchBar/>
                         {state.showImportedTable&&
                             <button name="" style={{float:"",marginRight:"40rem"}} className="btn-add1" onClick={handlePrint}>Print</button>
                         }

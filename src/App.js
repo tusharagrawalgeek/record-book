@@ -10,8 +10,10 @@ import {
 import HomePage from './components/HomePage';
 import Dashboard from './components/Dashboard';
 import Import from './components/Import';
-import Delete from './components/Delete';
+
 import Export from './components/Export';
+import DeleteOptions from './components/DeleteOptions';
+import Delete from './components/Delete';
 function App(){
   const [state,setState]=useState(
     {
@@ -36,7 +38,7 @@ function App(){
         <Route path="/home" element={<HomePage/>}>
           <Route path="dashboard" element={<Dashboard/>}/>
           <Route path="import" element={<Import/>}/>
-          <Route path="delete" element={<Delete/>}/>
+          <Route path="delete" element={<DeleteOptions/>}/>
           <Route path="export" element={<Export/>}/>
         </Route>
         

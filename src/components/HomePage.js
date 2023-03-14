@@ -19,12 +19,6 @@ import {
                     <SideBar/>
                 </div>
                 <div className="right">
-                    {/* <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/import" element={<Import/>} />
-                    
-                    </Routes>
-                     */}
                      <Outlet/>
                 </div>
             </div>

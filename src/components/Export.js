@@ -210,7 +210,8 @@ function Export(){
             setState(p=>{
                 return({
                     ...p,
-                    exportedItems:items
+                    exportedItems:items,
+                    searchItems:items
                 });
             })
         })
@@ -299,6 +300,7 @@ function Export(){
             }}>
                 {state.showExportedItems&&
                 <>
+                
                 <ExportedTable items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange} searchBar/>
                 <div style={{
                     margin:"auto",
@@ -331,7 +333,6 @@ function Export(){
     );
 function showFullForm(){
     return(
-        
         <>
         <table style={{
                     margin:"auto",

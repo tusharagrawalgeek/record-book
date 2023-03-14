@@ -6,7 +6,7 @@ import axios from "axios";
 import url from '../vars.js';
 import Loader from './Loader.js';
 import Modal from './Modal';    
-function Delete(){
+function Delete(props){
    
     const [state,setState]=useState(
         {
@@ -15,7 +15,8 @@ function Delete(){
             showLoader:false,
             showModal:false,
             message:"",
-            messageVariant:""
+            messageVariant:"",
+            name:props.name
         }
     );
      useEffect(()=>{
@@ -23,7 +24,8 @@ function Delete(){
         console.log("delete started");
         const promises=state.cbdata.map(i=>{
             var promise=new Promise(async(resolve,reject)=>{
-            await axios.delete(url+'/deleteitem/'+i)
+                const listType=state.name==="inventory"?"deleteitem":state.name==="importedItems"?"deleteimporteditem":"deleteexporteditem"
+            await axios.delete(url+'/'+listType+'/'+i)
             .then(res=>{
                 console.log("removed"+i);
                 resolve("Done")
@@ -79,7 +81,8 @@ function Delete(){
         }
     },[state.showModal])
     function loadData(){
-        axios.get(url+'/getitem')
+        const listType=state.name==="inventory"?"getitem":state.name==="importedItems"?"getimporteditems":"getexported"
+        axios.get(url+'/'+listType)
         .then(res=>{
             const items=res.data.data;
             setState(p=>{
@@ -115,6 +118,7 @@ function Delete(){
         });
         
     }
+
     function handelSubmit(){
         setState(p=>({
             ...p,
@@ -137,9 +141,6 @@ function Delete(){
         <div style={{
             width:"100%"
         }}>
-            <div>
-                <h2 style={{marginTop:"0",color:color.contrast}}>DELETE ITEMS</h2>
-            </div>
             <div style={{
                 margin:"auto",
                 marginTop:"4em",
@@ -197,6 +198,9 @@ function Delete(){
                 </table>
                 <button onClick={handelSubmit}>
                     Remove
+                </button>
+                <button name="cancel" onClick={(e)=>props.handleClick(e)}>
+                    Cancel
                 </button>
             </div>
         </div>
