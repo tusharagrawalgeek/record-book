@@ -17,7 +17,7 @@ function Export(){
             showExportForm2:false,
             currentItems:[],
             exportItemCount:1,
-            particular:"",
+            particular:[""],
             quantity:[0],
             id:[""],
             exportedTo:"",
@@ -126,10 +126,11 @@ function Export(){
 
         state.id.push("")
         state.quantity.push(0)
+        console.log(typeof(state.particular));
+        state.particular.push("")
         setState(p=>({
             ...p,
             exportItemCount:state.exportItemCount+1,
-            
         }))
     }
     function handleClick(e){
@@ -168,6 +169,7 @@ function Export(){
         const i=e.target.getAttribute("name");
         state.quantity.splice([i],1);
         state.id.splice([i],1);
+        state.particular.splice([i],1);
         state.selectValues.splice([i],1);
         setState(p=>({
             ...p,
@@ -190,12 +192,13 @@ function Export(){
         }))
         state.id[[i]]=item._id;
         state.quantity[[i]]=item.quantity
+        state.particular[[i]]=item.name
         state.selectValues[[i]]=item.name
         console.log(item,i);
         setState(p=>(
             {
                 ...p,
-                particular:item.name,
+             
             
             }
         ));
@@ -356,12 +359,12 @@ function showFullForm(){
                         </th>
                     </tr>
                     {[...Array(state.exportItemCount)].map((l,index)=>{
-                        // {console.log(index)}
                         return(
                             <>
                             <tr >
                         <td className="td-1">
-                            {index===state.exportItemCount-1?
+                            {console.log(state.particular[index],index)}
+                            {state.particular[index]===""?
                             <select className="select" onChange={handleOptionChange} name="particular">
                                 <option style={{background:color.dark}} selected disabled hidden>Select</option>
                                 {state.currentItems.map((i,ind)=>{
