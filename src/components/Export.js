@@ -9,7 +9,6 @@ import Modal from './Modal.js';
 import ExportedTable from "./ExportedTable";
 import searchQuery from "./searchQuery";
 import Select from 'react-select'
-import { blue } from "@mui/material/colors";
 
 function Export(){
     const [state,setState]=useState(
