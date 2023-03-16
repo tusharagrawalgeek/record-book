@@ -8,6 +8,9 @@ import Loader from './Loader.js';
 import Modal from './Modal.js';
 import ExportedTable from "./ExportedTable";
 import searchQuery from "./searchQuery";
+import Select from 'react-select'
+import { blue } from "@mui/material/colors";
+
 function Export(){
     const [state,setState]=useState(
         {   dateExported:new Date().getDate()+" / "+(new Date().getMonth()+1)+" / "+new Date().getFullYear(),
@@ -29,8 +32,10 @@ function Export(){
             startExport:false,
             selectValues:[],
             searchValue:"",
-            searchItems:[]
-        }
+            searchItems:[],
+            showOptions:false,
+            options:[]
+        }   
     );
     useEffect(()=>{
         if(state.showModal){
@@ -45,6 +50,43 @@ function Export(){
             },3000)
         }
     },[state.showModal])
+    const colourStyles = {
+        control:( styles,{ data, isDisabled, isFocused, isSelected }) => {
+            // console.log(styles);
+            return({ ...styles,
+                 backgroundColor: 'none',
+                 color:color.white,
+                 
+                 borderColor:isSelected?"red":"black",
+                 borderRadius:"0",
+                 borderStyle:"none",
+                 borderWidth:0});
+        },
+        option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+          return ({
+            border:0,
+            background:isFocused?color.dark:color.dark,
+            color: color.white,
+            margin:0,
+            borderColor:"red",
+                 borderRadius:"0",
+                 borderStyle:"none",
+                 borderWidth:0,
+            // padding:"0.2rem",
+            cursor: isDisabled ? 'not-allowed' : 'grab'
+          });
+        },
+        input: (styles) => ({ ...styles, color:"white",fontWeight:"light"}),
+        placeholder: (styles) => {
+            // console.log(styles);
+            return{ ...styles, color:"white",background:color.dark,  }},
+        singleValue: (styles) => ({ ...styles, color:"white",background:color.dark})
+    }
+    // const options = [
+    //     { value: 'chocolate', label: 'Chocolate' },
+    //     { value: 'strawberry', label: 'Strawberry' },
+    //     { value: 'vanilla', label: 'Vanilla' }
+    //   ]
     useEffect(()=>{
         if(state.startExport){
             const promises=[]
@@ -128,9 +170,17 @@ function Export(){
         state.quantity.push(0)
         console.log(typeof(state.particular));
         state.particular.push("")
+        const opts=state.currentItems.map(j=>{
+            if(state.id.includes(j._id)){
+                return({value:j._id,label:j.name,disabled:true});
+            }
+            return({value:j._id,label:j.name});
+        })
         setState(p=>({
             ...p,
             exportItemCount:state.exportItemCount+1,
+
+            options:opts
         }))
     }
     function handleClick(e){
@@ -142,13 +192,16 @@ function Export(){
             axios.get(url+'/getitem')
         .then(res=>{
             const items=res.data.data;
+            const opts=items.map(i=>{
+                return({value:i._id,label:i.name});
+            })
             setState(p=>{
                 return({
                     ...p,
                     ...arr,
                     [obj.name]:!state[obj.name],
                     currentItems:items,
-                    // itemToExport:null,
+                    options:opts
                 });
             })
         })
@@ -171,15 +224,25 @@ function Export(){
         state.id.splice([i],1);
         state.particular.splice([i],1);
         state.selectValues.splice([i],1);
+        const opts=state.currentItems.map(j=>{
+            if(state.id.includes(j._id)){
+                return({value:j._id,label:j.name,disabled:true});
+            }
+            return({value:j._id,label:j.name});
+        })
         setState(p=>({
             ...p,
-            exportItemCount:state.exportItemCount-1
+            exportItemCount:state.exportItemCount-1,
+            options:opts
         }))
     }
     function handleOptionChange(e){
-        console.log(e.target.value);
-        const obj=e.target;
-        const [itemId,i]=obj.value.split(" ");
+        console.log(e);
+        const itemId=e.value,i=state.id.length-1;
+        console.log(itemId,i);
+        // const obj=e.target;
+        // const [itemId,i]=obj.value.split(" ");
+
         var item;
         (state.currentItems.map(j=>{
             console.log(j._id,itemId);
@@ -194,19 +257,24 @@ function Export(){
         state.quantity[[i]]=item.quantity
         state.particular[[i]]=item.name
         state.selectValues[[i]]=item.name
-        console.log(item,i);
+        // console.log(item,i);
+        // const opts=state.currentItems.map(j=>{
+        //     if(state.id.includes(j._id)){
+        //         return({value:j._id,label:j.name,disabled:true});
+        //     }
+        //     return({value:j._id,label:j.name});
+        // })
         setState(p=>(
             {
                 ...p,
-             
-            
+                // options:opts
             }
         ));
 
     }
     useEffect(()=>{
         if(state.showExportedItems){
-        console.log(url);
+        // console.log(url);
         axios.get(url+'/getexported')
         .then(res=>{
             const items=res.data.data;
@@ -365,14 +433,20 @@ function showFullForm(){
                         <td className="td-1">
                             {console.log(state.particular[index],index)}
                             {state.particular[index]===""?
-                            <select className="select" onChange={handleOptionChange} name="particular">
-                                <option style={{background:color.dark}} selected disabled hidden>Select</option>
-                                {state.currentItems.map((i,ind)=>{
-                                    return(
-                                        <option style={{background:color.dark}} value={i._id+" "+index} disabled={state.id.includes(i._id)}>{i.name}</option>
-                                    );
-                                })}
-                            </select>
+                            <>  
+                                {/* <div value={index} name="valueProvider"> */}
+                                <Select options={state.options} styles={colourStyles} onChange={handleOptionChange} isOptionDisabled={(option) => option.disabled}/>
+                                {/* </div> */}
+                                
+                            </>
+                            // <select className="select" onChange={handleOptionChange} name="particular">
+                            //     <option style={{background:color.dark}} selected disabled hidden>Select</option>
+                            //     {state.currentItems.map((i,ind)=>{
+                            //         return(
+                            //             <option style={{background:color.dark}} value={i._id+" "+index} disabled={state.id.includes(i._id)}>{i.name}</option>
+                            //         );
+                            //     })}
+                            // </select>
                             :
                              state.selectValues[index]
                             }

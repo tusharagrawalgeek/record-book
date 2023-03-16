@@ -72,19 +72,32 @@
     /* margin: auto; */
     min-height:90vh;
     max-height:90vh;
-    padding: 5vh;
+    padding: 5vh 5vh 5vh 7vh;
     display: block;
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
 }
 .left{
     /* display: table; */
     float: left;
     background-color: var(--light);
-    min-width: 10%;
-    min-height:90vh;
-    max-height:90vh;
-    padding: 5vh;
+    width: fit-content;
+    /* min-height:93vh;
+    max-height:90vh; */
+    height: 96vh;
+    padding: 5vh 1vh;
+    display: inline-block;
+}
+.leftham{
+    float: left;
+    position: fixed;
+    background-color: var(--light);
+    width: fit-content;
+    /* min-height:90vh;
+    max-height:90vh; */
+    margin: 5vh 1vh;
+    
+    /* padding: 1vh 1vh; */
     display: inline-block;
 }
 .table-container{

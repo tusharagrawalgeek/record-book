@@ -21,7 +21,7 @@ function SideBar(){
         {console.log(window.location.href)}
             <div className="table-container">
                         <table style={{
-                            margin:"0 auto",
+                            margin:"0 3vh",
                             width:"100%"
                         }}>
                             <tr >
