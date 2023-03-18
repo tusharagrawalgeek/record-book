@@ -238,6 +238,7 @@ td{
     font-weight: bold;
     box-shadow:inset 1px 1px 2px 0px black;
 }
+
 .select{
     outline:none;
     /* display:inline-block; */
@@ -257,8 +258,19 @@ td{
     color: var(--contrast);
     font-weight: bold;
     
-    /* margin: auto; */
-    /* box-shadow:1px 1px 2px 0px black; */
+    margin: auto;
+    box-shadow:1px 1px 2px 0px black;
+}
+.btn-add-d:active{
+    background-color: var(--light);
+    border: none;
+    padding: 5px 15px;
+    border-radius: 2px;
+    color: var(--contrast);
+    font-weight: bold;
+    
+    margin: auto;
+    box-shadow: inset 1px 1px 2px 0px black;
 }
 .btn-add-d:disabled{
     background-color: rgb(75, 75, 75);

@@ -1,4 +1,5 @@
 function searchQuery(str,arr){
+    // if(str==="")return arr;
     var cols=[]
     Object.keys(arr[0]).forEach((key) => cols.push(key));
     console.log(arr);

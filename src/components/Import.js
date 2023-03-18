@@ -9,7 +9,6 @@ import Table from "./Table.js";
 import Loader from "./Loader";
 import { useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
-import searchQuery from "./searchQuery";
 import Modal from './Modal';
 function Import(){
     const comp=useRef();
@@ -28,16 +27,15 @@ function Import(){
             colOrder:[-1,-1,-1,-1,-1,-1,-1],
             showLoader:false,
             importedItems:[],
-            searchItems:[],
             showSingleUpload1:false,
             showSingleUpload2:false,
             showBulkUpload:false,
             showImportedTable:true,
-            searchValue:"",
             showModal:false,
             message:"",
             messageVariant:"",
-            strength:""
+            strength:"",
+            dataToDisplay:[],
         }
     );
     async function addBulkItems(){
@@ -65,7 +63,7 @@ function Import(){
             })
         // }
         }else{
-            console.log("here ");
+            // console.log("here ");
             resolve("Added all the data");
         }
         })
@@ -100,7 +98,7 @@ function Import(){
         if(state.strength==="single"){
         addSingleItem()
         .then(val=>{
-            console.log(val);
+            // console.log(val);
             setState(p=>({
                 ...p,
                 showLoader:false,
@@ -132,7 +130,7 @@ function Import(){
             const allpromises=addBulkItems()
             allpromises
             .then((x)=>{
-                console.log(x);
+                // console.log(x);
                   setState(p=>({
                     ...p,
                     showLoader:false,
@@ -172,8 +170,9 @@ function Import(){
             },3000)
         }
     },[state.showModal])
+    
     function closeModalCallback(){
-        console.log("Callback");
+        // console.log("Callback");
         setState(p=>({
             ...p,
             showModal:false,
@@ -192,15 +191,15 @@ function Import(){
         content:()=>comp.current,
         documentTitle:"Data",
         onAfterPrint:()=>alert("printed")
-    });
-    function loadImportedItems(){
-        axios.get(url+'/getimporteditems')
+    })
+    async function loadImportedItems(){
+        await axios.get(url+'/getimporteditems')
         .then(res=>{
+            console.log("function called",res);
             setState(p=>(
                 {
                     ...p,
                     importedItems:res.data.data,
-                    searchItems:res.data.data
                 }
             ))
         })
@@ -221,8 +220,6 @@ function Import(){
     }
     function handleChange(e){
         var obj=e.target;
-
-        console.log("hre");
         if(obj.name==="expiryDate"){
             var value=obj.value;
             if(state.expiryDate.length===1){
@@ -232,15 +229,6 @@ function Import(){
                 return({
                     ...p,
                     [obj.name]:value
-                });
-            });
-        }else if(obj.name==="searchValue"){
-            const data=searchQuery(obj.value,state.importedItems);
-            setState(p=>{
-                return({
-                    ...p,
-                    searchItems:data,
-                    [obj.name]:obj.value
                 });
             });
         }else
@@ -271,7 +259,6 @@ function Import(){
 
     }
     function proceedButton(){
-        // var obj=e.target.getAttribute("name");
         var arr={showSingleUpload1:false,showSingleUpload2:false,showBulkUpload:false,showImportedTable:false}
         setState(p=>(
             {
@@ -300,7 +287,6 @@ function Import(){
             colNames:[],
             bulkData:[],
             colOrder:[-1,-1,-1,-1,-1,-1,-1],
-            searchValue:""
             })
         })
         
@@ -312,7 +298,7 @@ function Import(){
             console.log(err);            
           }
           else{
-            console.log(resp.cols,resp.rows);
+            // console.log(resp.cols,resp.rows);
             const data=resp.rows;
             const colNames=data[0];
             setState(p=>{
@@ -328,7 +314,7 @@ function Import(){
         });                  
     }
     return(
-        <> 
+        <> {console.log("Loded with data",state.importedItems)}
             <Loader show={state.showLoader}/>
             <Modal message={state.message} type={state.messageVariant} show={state.showModal} closeCallback={closeModalCallback}/>
             <div style={{
@@ -362,7 +348,7 @@ function Import(){
                         <div name="container" style={{textAlign:"center",display:"block"}}>                         
                         
                         <div className="singlebar">
-                        <Table items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange} searchBar/>
+                        <Table items={state.importedItems} searchBar/>
                         {state.showImportedTable&&
                             <button name="" style={{float:"",marginRight:"40rem"}} className="btn-add1" onClick={handlePrint}>Print</button>
                         }
@@ -569,7 +555,7 @@ function Import(){
                 }
                 </> 
             </div>
-            {console.log("Exited the function")}
+            {/* {console.log("Exited the function")} */}
         </>
     );
     function entryForm(){
