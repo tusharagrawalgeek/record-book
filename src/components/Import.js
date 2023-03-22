@@ -14,7 +14,7 @@ function Import(){
     const comp=useRef();
     const [state,setState]=useState(
         {   
-            dateAdded:new Date().getDate()+" / "+(new Date().getMonth()+1)+" / "+new Date().getFullYear(),
+            dateAdded:"",
             itemName:"",
             quantity:"",
             expiryDate:"",
@@ -72,10 +72,13 @@ function Import(){
         return promises;
     }
     async function addSingleItem(){
+        var d= new Date(state.dateAdded);
+        console.log(d);
          const data={
             name:state.itemName,
             quantity:state.quantity,
-            date:state.dateAdded,
+            // date:d[2]+"/"+d[1]+"/"+d[0],
+            date:d.getDate()+" / "+(d.getMonth()+1)+" / "+d.getFullYear(),
             expiry:state.expiryDate,
             description:state.description,
             receivedBy:state.receivedBy,
@@ -658,11 +661,12 @@ function Import(){
                             </td>
                             <td className="tditem">
                             <input
+                            type="date"
                             className="inputitem"
                             name="dateAdded"
                             value={state.dateAdded}
                             onChange={handleChange}
-                            readOnly/>
+                            />
                             </td>
                         </tr>
                         <tr>

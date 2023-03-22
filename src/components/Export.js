@@ -289,10 +289,11 @@ function Export(){
     }
     },[state.showExportedItems]);
      function exportItem(item,quantity){
+        var d= new Date(state.dateExported);
         var data={};
         data.name=item.name
         data.quantity=quantity
-        data.date=state.dateExported
+        data.date=d.getDate()+" / "+(d.getMonth()+1)+" / "+d.getFullYear()
         data.expiry=item.expiry
         data.description=item.description
         data.receivedBy=item.receivedBy
@@ -371,7 +372,7 @@ function Export(){
                 {state.showExportedItems&&
                 <>
                 
-                <ExportedTable items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange} searchBar/>
+                <ExportedTable items={state.searchItems} searchBar/>
                 <div style={{
                     margin:"auto",
                     marginTop:"2em",
@@ -514,11 +515,12 @@ function showPreForm(){
                             </td>
                             <td className="tditem">
                             <input
+                            type="date"
                             className="inputitem"
                             name="dateExported"
                             value={state.dateExported}
                             onChange={handleChange}
-                            readOnly/>
+                            />
                             </td>
                         </tr>
                         <tr>
