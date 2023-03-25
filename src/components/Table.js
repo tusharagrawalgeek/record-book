@@ -6,6 +6,8 @@ import filterlight from '../filter55.png';
 import FilterPopup from "./FilterPopup.js";
 import dateFilterUtil from '../functions/dateFilterUtil.js';
 import searchQuery from "./searchQuery.js";
+import * as color from '../colors.js';
+
 function Table(props){
     const [state,setState]=useState(
         {
@@ -16,11 +18,18 @@ function Table(props){
             dataToDisplay:props.items,
             from:"",
             to:"",
-            searchValue:""
+            searchValue:"",
+            dateSorted:false,
+            expiryDateSorted:false,
         }
     );
     // useEffect(()=>{
-        console.log(state.items,props.items);
+    //     if(state.dateSorted){
+    //         sortDate();
+    //     }
+    // },[state.dateSorted])
+    // useEffect(()=>{
+        // console.log(state.items,props.items);
         if(state.items!==props.items){
             console.log(true);
             setState(p=>({
@@ -79,9 +88,47 @@ function Table(props){
             // to:to
         }))
     }
+    function sortDate(){
+        state.dataToDisplay.sort((a, b) => compareDate(a.date,b.date));
+        // console.log(state.dataToDisplay);
+        setState(p=>({
+            ...p,
+            dateSorted:true
+        }));
+    }
+    function sortExpiryDate(){
+        state.dataToDisplay.sort((a, b) => compareExpiryDate(a.expiry,b.expiry));
+        // console.log(state.dataToDisplay);
+        setState(p=>({
+            ...p,
+            expiryDateSorted:true
+        }));
+    }
+    function compareDate(a,b){
+        var date=a.split(" / ");
+        var d1=new Date(date[2],date[1]-1,date[0],0,0,0);
+        date=b.split(" / ");
+        var d2=new Date(date[2],date[1]-1,date[0],0,0,0);
+        if(d2<d1){
+            return 1;
+        }else if(d1<d2){
+            return -1;
+        }
+        return 0;
+    }
+    function compareExpiryDate(a,b){
+        var date=a.split(" / ");
+        var d1=new Date(date[2],date[1]-1,date[0],0,0,0);
+        date=b.split(" / ");
+        var d2=new Date(date[2],date[1]-1,date[0],0,0,0);
+        if(d2<d1){
+            return 1;
+        }
+        return -1;
+    }
     useEffect(()=>{
         const data=dateFilterUtil(state.from,state.to,state.items);
-        console.log(data);
+        // console.log(data);
         setState(p=>({
             ...p,
             searchValue:"",
@@ -97,7 +144,7 @@ function Table(props){
     function handleChange(e){
         const obj=e.target;
         const data=searchQuery(obj.value,state.dateFilteredItems);
-        console.log(data);
+        // console.log(data);
         setState(p=>({
             ...p,
             searchFilteredItems:data,
@@ -112,7 +159,8 @@ function Table(props){
     }
     if(state.items!=undefined&&state.items!==null&&state.items!=[])
     return(
-        <>{console.log(state.dataToDisplay,state.items)}
+        <>
+        {/* {console.log(state.dataToDisplay,state.items)} */}
             <FilterPopup handleDateChange={handleDateChange} from={state.from} to={state.to} show={state.showFilterPopup} handleFilter={handleFilter} closeCallback={closeCallback} clearDateFilter={clearDateFilter}/>
             {DisplayTable(true,state.dataToDisplay)}
         </>
@@ -188,6 +236,16 @@ function Table(props){
                                     onClick={()=>setState(p=>({...p,showFilterPopup:true}))}
                                     style={{margin:"5px 0px 5px 15px",padding:"2px",verticalAlign:"center",backgroundColor:"transparent"}}
                                 />
+                                <button onClick={sortDate}
+                                className="btn-add"
+                                style={{
+                                    padding:"0rem 0.2rem",
+                                    marginLeft:"0.1rem",
+                                    background:"none",
+                                    border:"0",
+                                    height:"20px",
+                                    color:state.dateSorted?colors.contrast:colors.light
+                                }}>&#9650;</button>
                                 </div>
                         </th>
                         <th className="th">
@@ -204,6 +262,16 @@ function Table(props){
                         </th>
                         <th className="th">
                             Expiry Date
+                            {/* <button onClick={sortExpiryDate}
+                                className="btn-add"
+                                style={{
+                                    padding:"0rem 0.2rem",
+                                    marginLeft:"0.1rem",
+                                    background:"none",
+                                    border:"0",
+                                    height:"20px",
+                                    color:state.dateExpirySorted?colors.contrast:colors.light
+                                }}>&#9650;</button> */}
                         </th>
                         <th className="th">
                             Remarks

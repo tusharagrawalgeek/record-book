@@ -34,7 +34,6 @@ function App(){
       <Router>
         <Routes>
         <Route path="/" element={<Login/>} />
-        {/* <Route path="/homepage" element={<HomePage/>}/> */}
         <Route path="/home" element={<HomePage/>}>
           <Route path="dashboard" element={<Dashboard/>}/>
           <Route path="import" element={<Import/>}/>
