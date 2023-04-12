@@ -465,7 +465,7 @@ function Export() {
                       onChange={handleQuantityChange}
                     />
                   </td>
-                  <td className="td-1">hgbf</td>
+                  <td className="td-1"></td>
                   <td className="td-1">
                     <button
                       className="btn-add"
