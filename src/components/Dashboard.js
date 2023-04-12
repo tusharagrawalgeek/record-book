@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import  { useRef } from 'react';
+
 import { useState } from "react";
 import '../style.css';
 import * as color from '../colors.js';
@@ -7,6 +9,9 @@ import url from '../vars.js';
 import Table from "./Table";
 // import Loader from "./Loader";
 import searchQuery from "./searchQuery";
+import ContactUs from "../Email/sendEmail";
+import emailjs from '@emailjs/browser';
+
 function Dashboard(){
    
     const [state,setState]=useState(
@@ -16,6 +21,28 @@ function Dashboard(){
             searchItems:[]
         }
     );
+    const form = useRef();
+  function sendingData(){
+    return "message"
+    
+  }
+  const sendEmail = (e) => {
+    // e.preventDefault();
+    console.log("clicked");
+    emailjs.
+    emailjs.send("service_i3urbym", "template_71pg1ee", {message:sendingData}, 'yVl57SUQeWciNRsjv')
+    .then((result) => {
+        console.log(result.text);
+    }, (error) => {
+        console.log(error.text);
+    });
+    // emailjs.sendForm("service_i3urbym", "template_71pg1ee", form.current, 'yVl57SUQeWciNRsjv')
+    //   .then((result) => {
+    //       console.log(result.text);
+    //   }, (error) => {
+    //       console.log(error.text);
+    //   });
+  };
     function handleChange(e){
         const obj=e.target;
         const data=searchQuery(obj.value,state.items);
@@ -47,6 +74,9 @@ function Dashboard(){
     return(
         <>
         {/* <Loader/> */}
+        {/* <form ref={form} >
+            <textarea name="message">Hello txt rishi</textarea>
+        </form> */}
         <div style={{
             width:"100%"
         }}>
@@ -56,7 +86,8 @@ function Dashboard(){
             <div style={{
                 margin:"auto",
                 marginTop:"4em"
-            }}>
+            }}> 
+            {/* <button onClick={sendEmail}>sync data</button> */}
                 <Table items={state.searchItems} searchValue={state.searchValue} handleChange={handleChange}  searchBar/>
             </div>
         </div>

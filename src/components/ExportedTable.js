@@ -144,6 +144,7 @@ function ExportedTable(props){
     function downloadPDF(){
         const doc = new jsPDF()
 doc.autoTable({ html: '#table-data',theme:'grid',styles:{fontStyle:'',fontSize:7}, headStyles:{fillColor:"#536895",fontStyle:"bold",textColor:"white"} })
+
 doc.save('Niveda Stock '+new Date().getDate() +
 " / " +
 (new Date().getMonth() + 1) +
