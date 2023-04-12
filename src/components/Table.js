@@ -7,7 +7,11 @@ import FilterPopup from "./FilterPopup.js";
 import dateFilterUtil from '../functions/dateFilterUtil.js';
 import searchQuery from "./searchQuery.js";
 import * as color from '../colors.js';
-
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { styled } from "@mui/system";
+import Pdfico from '@mui/icons-material/PictureAsPdf';
 function Table(props){
     const [state,setState]=useState(
         {
@@ -88,6 +92,12 @@ function Table(props){
             // to:to
         }))
     }
+    const StyledSortIcon = styled(ArrowDropUpIcon, {
+        name: "StyledSortIcon",
+        slot: "Wrapper"
+      })({
+        color: !state.dateSorted?colors.light:colors.contrast,
+      });
     function sortDate(){
         state.dataToDisplay.sort((a, b) => compareDate(a.date,b.date));
         // console.log(state.dataToDisplay);
@@ -98,7 +108,6 @@ function Table(props){
     }
     function sortExpiryDate(){
         state.dataToDisplay.sort((a, b) => compareExpiryDate(a.expiry,b.expiry));
-        // console.log(state.dataToDisplay);
         setState(p=>({
             ...p,
             expiryDateSorted:true
@@ -110,9 +119,9 @@ function Table(props){
         date=b.split(" / ");
         var d2=new Date(date[2],date[1]-1,date[0],0,0,0);
         if(d2<d1){
-            return 1;
-        }else if(d1<d2){
             return -1;
+        }else if(d1<d2){
+            return 1;
         }
         return 0;
     }
@@ -157,6 +166,11 @@ function Table(props){
             
         }))
     }
+    function downloadPDF(){
+        const doc = new jsPDF()
+doc.autoTable({ html: '#table-data',theme:'grid',styles:{fontStyle:'',fontSize:7}, headStyles:{fillColor:"#536895",fontStyle:"bold",textColor:"white"} })
+doc.save('table.pdf')
+    }
     if(state.items!=undefined&&state.items!==null&&state.items!=[])
     return(
         <>
@@ -167,7 +181,7 @@ function Table(props){
     );
     else return <>{DisplayTable(true,[])}</>
 
-
+    
     function DisplayTable(searchBar,items){
         return(
             <>
@@ -195,21 +209,23 @@ function Table(props){
                 {searchBar&&
                     <tr style={{padding:"1rem"}}>
                         <td style={{padding:"1rem"}}     colSpan={8}>
+                        <Pdfico onClick={downloadPDF} style={{float:"right",margin: "10px 10px"}}/>
                     <input 
                          type="text"
                          name="searchValue"
                          className="searchbar"
                          value={state.searchValue}
                          placeholder="Search..."
-
                          onChange={handleChange}
                          />
+                    
                     </td>
                     </tr>
                     }
+                    
                     {/* table2 */}
                     </table>
-            <table style={{
+            <table id="table-data" style={{
                     borderSpacing:"0",
                       margin:"5px auto",
                     background:colors.mid,
@@ -219,7 +235,8 @@ function Table(props){
                    display:"block",
                    textAlign:"center"
                 }}> 
-                    <tr>
+                    <thead>
+                        <tr>
                     <th className="th">
                             S.No.
                         </th>
@@ -236,16 +253,8 @@ function Table(props){
                                     onClick={()=>setState(p=>({...p,showFilterPopup:true}))}
                                     style={{margin:"5px 0px 5px 15px",padding:"2px",verticalAlign:"center",backgroundColor:"transparent"}}
                                 />
-                                <button onClick={sortDate}
-                                className="btn-add"
-                                style={{
-                                    padding:"0rem 0.2rem",
-                                    marginLeft:"0.1rem",
-                                    background:"none",
-                                    border:"0",
-                                    height:"20px",
-                                    color:state.dateSorted?colors.contrast:colors.light
-                                }}>&#9650;</button>
+                                <StyledSortIcon onClick={sortDate}
+                                />
                                 </div>
                         </th>
                         <th className="th">
@@ -276,7 +285,8 @@ function Table(props){
                         <th className="th">
                             Remarks
                         </th>
-                    </tr>
+                        </tr>
+                    </thead>
                     {items.map((i,ind)=>{
                         return(
                                 <tr>

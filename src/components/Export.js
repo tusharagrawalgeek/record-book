@@ -391,12 +391,7 @@ function Export() {
                 }}
               >
                 <div className="singleBar">
-                  <button
-                    style={{ float: "", marginRight: "30rem" }}
-                    className="btn-add1"
-                  >
-                    Print
-                  </button>
+                 
                   <button
                     style={{ float: "" }}
                     className="btn-add1"

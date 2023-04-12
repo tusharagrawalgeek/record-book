@@ -6,6 +6,10 @@ import filterlight from '../filter55.png';
 import FilterPopup from "./FilterPopup.js";
 import dateFilterUtil from '../functions/dateFilterUtil.js';
 import searchQuery from "./searchQuery.js";
+import Pdfico from '@mui/icons-material/PictureAsPdf';
+import jsPDF from 'jspdf';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { styled } from "@mui/system";
 function ExportedTable(props){
     const [state,setState]=useState(
         {
@@ -16,7 +20,8 @@ function ExportedTable(props){
             dataToDisplay:props.items,
             from:"",
             to:"",
-            searchValue:""
+            searchValue:"",
+            dateSorted:false
         }
     );
     // useEffect(()=>{
@@ -46,6 +51,12 @@ function ExportedTable(props){
     //     ))
     // })
     //callback for date filter popup
+    const StyledSortIcon = styled(ArrowDropUpIcon, {
+        name: "StyledSortIcon",
+        slot: "Wrapper"
+      })({
+        color: !state.dateSorted?colors.light:colors.contrast,
+      });
     function closeCallback(){
         setState(p=>({
             ...p,
@@ -110,6 +121,31 @@ function ExportedTable(props){
             
         }))
     }
+    function sortDate(){
+        state.dataToDisplay.sort((a, b) => compareDate(a.date,b.date));
+        // console.log(state.dataToDisplay);
+        setState(p=>({
+            ...p,
+            dateSorted:true
+        }));
+    }
+    function compareDate(a,b){
+        var date=a.split(" / ");
+        var d1=new Date(date[2],date[1]-1,date[0],0,0,0);
+        date=b.split(" / ");
+        var d2=new Date(date[2],date[1]-1,date[0],0,0,0);
+        if(d2<d1){
+            return -1;
+        }else if(d1<d2){
+            return 1;
+        }
+        return 0;
+    }
+    function downloadPDF(){
+        const doc = new jsPDF()
+doc.autoTable({ html: '#table-data',theme:'grid',styles:{fontStyle:'',fontSize:7}, headStyles:{fillColor:"#536895",fontStyle:"bold",textColor:"white"} })
+doc.save('table.pdf')
+    }
     if(state.items!=undefined&&state.items!==null&&state.items!=[])
     return(
         <>
@@ -149,6 +185,7 @@ function ExportedTable(props){
                 {searchBar&&
                     <tr style={{padding:"1rem"}}>
                         <td style={{padding:"1rem"}}     colSpan={8}>
+                        <Pdfico onClick={downloadPDF} style={{float:"right",margin: "10px 10px"}}/>
                     <input 
                          type="text"
                          name="searchValue"
@@ -163,7 +200,8 @@ function ExportedTable(props){
                     }
                     {/* table2 */}
                     </table>
-            <table style={{
+            <table id="table-data" 
+            style={{
                     borderSpacing:"0",
                       margin:"5px auto",
                     background:colors.mid,
@@ -173,6 +211,7 @@ function ExportedTable(props){
                    display:"block",
                    textAlign:"center"
                 }}> 
+                <thead>
                     <tr>
                     <th className="th">
                             S.No.
@@ -190,6 +229,9 @@ function ExportedTable(props){
                                     onClick={()=>setState(p=>({...p,showFilterPopup:true}))}
                                     style={{margin:"5px 0px 5px 15px",padding:"2px",verticalAlign:"center",backgroundColor:"transparent"}}
                                 />
+                                <StyledSortIcon onClick={sortDate}
+                                />
+                                {/* &#9650;</button> */}
                                 </div>
                         </th>
                         <th className="th">
@@ -210,6 +252,7 @@ function ExportedTable(props){
                             Purpose
                         </th>
                     </tr>
+                    </thead>
                     {items.map((i,ind)=>{
                         return(
                             <tr>

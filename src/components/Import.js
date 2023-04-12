@@ -8,7 +8,6 @@ import { ExcelRenderer, OutTable } from "react-excel-renderer";
 import Table from "./Table.js";
 import Loader from "./Loader";
 import { useEffect } from "react";
-import { useReactToPrint } from "react-to-print";
 import Modal from "./Modal";
 import Select from "react-select";
 import colourStyles from "../functions/SelectOptions";
@@ -236,17 +235,7 @@ function Import() {
       messageVariant: "",
     }));
   }
-  const handlePrint = useReactToPrint({
-    onBeforeGetContent: () => {
-      setState((p) => ({
-        ...p,
-        content: "Concmnjdcnsdjc ",
-      }));
-    },
-    content: () => comp.current,
-    documentTitle: "Data",
-    onAfterPrint: () => alert("printed"),
-  });
+  
   async function loadImportedItems() {
     await axios.get(url + "/getimporteditems").then((res) => {
       console.log("function called", res);
@@ -422,16 +411,7 @@ function Import() {
               >
                 <div className="singlebar">
                   <Table items={state.importedItems} searchBar />
-                  {state.showImportedTable && (
-                    <button
-                      name=""
-                      style={{ float: "", marginRight: "40rem" }}
-                      className="btn-add1"
-                      onClick={handlePrint}
-                    >
-                      Print
-                    </button>
-                  )}
+                 
                   {state.showImportedTable && (
                     <button
                       style={{ float: "" }}
