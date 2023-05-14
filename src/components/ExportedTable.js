@@ -10,6 +10,9 @@ import Pdfico from '@mui/icons-material/PictureAsPdf';
 import jsPDF from 'jspdf';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { styled } from "@mui/system";
+import undoExport from "../api/undoExport.js";
+import DeleteIcon from '@mui/icons-material/Delete';
+import Loader from "./Loader.js";
 function ExportedTable(props){
     const [state,setState]=useState(
         {
@@ -21,9 +24,30 @@ function ExportedTable(props){
             from:"",
             to:"",
             searchValue:"",
-            dateSorted:false
+            dateSorted:false,
+            undoExport:false,
+            undoExportId:null,
+            showLoader:false
         }
     );
+    useEffect(()=>{
+        async function undoExportAPI(){
+            const res =await undoExport(state.undoExportId);  
+            if(res){
+                console.log("undo successfull");
+                setState({...state, undoExport:false, undoExportId:null,showLoader:false});
+                
+                props.loader();
+                // props.refresh();
+            }else{
+                console.log("not deleted");
+                setState({...state, undoExport:false,showLoader:false});
+            }
+        }
+        if(state.undoExport){
+            undoExportAPI(state.undoExportId);
+        }
+    },[state.undoExport])
     // useEffect(()=>{
         // console.log(state.items,props.items);
         if(state.items!==props.items){
@@ -39,18 +63,6 @@ function ExportedTable(props){
             searchValue:""
             }))
         }
-    // },[])
-    // useEffect(()=>{
-    //     setState(p=>(
-    //         {
-    //             ...p,
-    //             dateFilteredItems:state.items,
-    //             searchFilteredItems:state.items,
-    //             dataToDisplay:props.items,
-    //         }
-    //     ))
-    // })
-    //callback for date filter popup
     const StyledSortIcon = styled(ArrowDropUpIcon, {
         name: "StyledSortIcon",
         slot: "Wrapper"
@@ -92,7 +104,7 @@ function ExportedTable(props){
     }
     useEffect(()=>{
         const data=dateFilterUtil(state.from,state.to,state.items);
-        console.log(data);
+        // console.log(data);
         setState(p=>({
             ...p,
             searchValue:"",
@@ -154,15 +166,22 @@ new Date().getFullYear()+'.pdf')
     if(state.items!=undefined&&state.items!==null&&state.items!=[])
     return(
         <>
-        {console.log(state.dataToDisplay,state.items)}
+        {/* {console.log(state.dataToDisplay,state.items)} */}
+        {/* <Loader show={state.showLoader} /> */}
             <FilterPopup handleDateChange={handleDateChange} from={state.from} to={state.to} show={state.showFilterPopup} handleFilter={handleFilter} closeCallback={closeCallback} clearDateFilter={clearDateFilter}/>
-            {console.log("Rendering after filter", state.dataToDisplay)}
+            {/* {console.log("Rendering after filter", state.dataToDisplay)} */}
             {DisplayTable(true,state.dataToDisplay)}
         </>
     );
     else return <>{DisplayTable(true,[])}</>
 
-
+    function handleDelete(e){
+        const val=document.getElementById("delete").getAttribute("value");
+        // const val=HTML.get.target.getAttribute("value");
+        // console.log(val);
+        props.loader();
+        setState({...state,undoExport:true,undoExportId:val,showLoader:true})
+    }
     function DisplayTable(searchBar,items){
         return(
             <>
@@ -256,6 +275,9 @@ new Date().getFullYear()+'.pdf')
                         <th className="th">
                             Purpose
                         </th>
+                        <th  className="th">
+                            Undo
+                        </th>
                     </tr>
                     </thead>
                     {items.map((i,ind)=>{
@@ -268,7 +290,7 @@ new Date().getFullYear()+'.pdf')
                            {i.date}
                           </td>
                           <td className="td-1">
-                           {i.name.charAt(0).toUpperCase() + i.name.slice(1)}
+                           {i.name}
                           </td>
                           
                           <td className="td-1">
@@ -283,6 +305,11 @@ new Date().getFullYear()+'.pdf')
                           </td>
                           <td className="td-1">
                            {i.purpose}
+                          </td>
+                          <td className="td-1"> 
+                            <div id="delete" onClick={handleDelete} value={i._id}>
+                                <DeleteIcon/>
+                            </div>
                           </td>
                           
                        </tr>

@@ -39,6 +39,7 @@ function Export() {
     searchItems: [],
     showOptions: false,
     options: [],
+    refresh:false
   });
   useEffect(() => {
     if (state.showModal) {
@@ -139,6 +140,12 @@ function Export() {
         });
     }
   }, [state.startExport]);
+  function refresh(){
+    setState({...state,refresh:true});
+  }
+  function loader(){
+    setState({...state,showLoader:!state.showLoader,refresh:true});
+  }
   function handleQuantityChange(e) {
     const obj = e.target;
     console.log(obj.name, obj.value);
@@ -271,7 +278,6 @@ function Export() {
   }
   useEffect(() => {
     if (state.showExportedItems) {
-      // console.log(url);
       axios
         .get(url + "/getexported")
         .then((res) => {
@@ -281,12 +287,13 @@ function Export() {
               ...p,
               exportedItems: items,
               searchItems: items,
+              refresh:false
             };
           });
         })
         .catch((err) => console.log(err));
     }
-  }, [state.showExportedItems]);
+  }, [state.showExportedItems,state.refresh]);
   function exportItem(item, quantity) {
     var d = new Date(state.dateExported);
     var data = {};
@@ -382,7 +389,7 @@ function Export() {
         >
           {state.showExportedItems && (
             <>
-              <ExportedTable items={state.searchItems} searchBar />
+              <ExportedTable items={state.searchItems} refresh={refresh} loader={loader} searchBar />
               <div
                 style={{
                   margin: "auto",
