@@ -39,8 +39,8 @@ function Import() {
     dataToDisplay: [],
     existingItem: false,
     options: [],
-    id:"",
-    existingQuantity:0
+    id: "",
+    existingQuantity: 0,
   });
   useEffect(() => {
     if (state.existingItem) {
@@ -49,7 +49,7 @@ function Import() {
         .then((data) => {
           console.log(data);
           const opts = data.map((i) => {
-            return { label: i.name, value: i._id,quant:i.quantity };
+            return { label: i.name, value: i._id, quant: i.quantity };
           });
           setState((p) => ({ ...p, options: opts }));
         })
@@ -104,14 +104,16 @@ function Import() {
       receivedFrom: state.receivedFrom,
     };
     var promise = new Promise(async (resolve, reject) => {
-        if(state.existingItem){
-            
-            await axios
-        .post(url + "/setimporteditem", data)
-        .then((res) => {
-          console.log(res);
-          data={...data, quantity:Number(state.quantity)+Number(state.existingQuantity)}
-           axios
+      if (state.existingItem) {
+        await axios
+          .post(url + "/setimporteditem", data)
+          .then((res) => {
+            console.log(res);
+            data = {
+              ...data,
+              quantity: Number(state.quantity) + Number(state.existingQuantity),
+            };
+            axios
               .put(url + "/update/" + state.id, data)
               .then((res) => {
                 console.log(res);
@@ -120,40 +122,42 @@ function Import() {
               .catch((e) => {
                 reject(0);
               });
-          resolve("Added successfully");
-        })
-        .catch((err) => {
-          console.log(data);
-          reject("Could not add due to " + err);
-        });
-        }else{
+            resolve("Added successfully");
+          })
+          .catch((err) => {
+            console.log(data);
+            reject("Could not add due to " + err);
+          });
+      } else {
+        
+        await axios
+          .post(url + "/setitem", data)
+          .then(async (res) => {
+            console.log(res);
             await axios
-            .post(url + "/setitem", data)
-        .then((res) => {
-          console.log(res);
-           axios
-            .post(url + "/setimporteditem", data)
-        .then((res) => {
-          console.log(res);
-          resolve("Added successfully");
-        })
-        .catch((err) => {
-          console.log(data);
-          reject("Could not add due to " + err);
-        });
-          resolve("Added successfully");
-        })
-        .catch((err) => {
-          console.log(data);
-          reject("Could not add due to " + err);
-        });
-        }
+              .post(url + "/setimporteditem", data)
+              .then((res) => {
+                console.log(res);
+                resolve("Added successfully");
+              })
+              .catch((err) => {
+                console.log(data);
+                reject("Could not add due to " + err);
+              });
+            resolve("Added successfully");
+          })
+          .catch((err) => {
+            console.log(data);
+            reject(0);
+          });
+      }
     });
     return promise;
   }
   useEffect(() => {
     if (state.strength === "single") {
-      addSingleItem()
+      const prms=addSingleItem();
+        prms
         .then((val) => {
           // console.log(val);
           setState((p) => ({
@@ -235,7 +239,7 @@ function Import() {
       messageVariant: "",
     }));
   }
-  
+
   async function loadImportedItems() {
     await axios.get(url + "/getimporteditems").then((res) => {
       console.log("function called", res);
@@ -411,7 +415,7 @@ function Import() {
               >
                 <div className="singlebar">
                   <Table items={state.importedItems} searchBar />
-                 
+
                   {state.showImportedTable && (
                     <button
                       style={{ float: "" }}
@@ -688,7 +692,14 @@ function Import() {
               <Select
                 options={state.options}
                 styles={colourStyles}
-                onChange={e=>setState(p=>({...p,itemName:e.label,id:e.value,existingQuantity:e.quant}))}
+                onChange={(e) =>
+                  setState((p) => ({
+                    ...p,
+                    itemName: e.label,
+                    id: e.value,
+                    existingQuantity: e.quant,
+                  }))
+                }
                 isOptionDisabled={(option) => option.disabled}
               />
             ) : (

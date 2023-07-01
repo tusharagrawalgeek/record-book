@@ -32,15 +32,17 @@ function ExportedTable(props){
     );
     useEffect(()=>{
         async function undoExportAPI(){
+            console.log(state.undoExportId);
             const res =await undoExport(state.undoExportId);  
             if(res){
                 console.log("undo successfull");
                 setState({...state, undoExport:false, undoExportId:null,showLoader:false});
-                
-                props.loader();
+                alert("Undo successfull");
+                // props.loader();
                 // props.refresh();
             }else{
-                console.log("not deleted");
+                console.log("undo unsuccessfull");
+                alert("Undo unsuccessfull");
                 setState({...state, undoExport:false,showLoader:false});
             }
         }
@@ -167,7 +169,7 @@ new Date().getFullYear()+'.pdf')
     return(
         <>
         {/* {console.log(state.dataToDisplay,state.items)} */}
-        {/* <Loader show={state.showLoader} /> */}
+        <Loader show={state.showLoader} />
             <FilterPopup handleDateChange={handleDateChange} from={state.from} to={state.to} show={state.showFilterPopup} handleFilter={handleFilter} closeCallback={closeCallback} clearDateFilter={clearDateFilter}/>
             {/* {console.log("Rendering after filter", state.dataToDisplay)} */}
             {DisplayTable(true,state.dataToDisplay)}
@@ -176,11 +178,12 @@ new Date().getFullYear()+'.pdf')
     else return <>{DisplayTable(true,[])}</>
 
     function handleDelete(e){
-        const val=document.getElementById("delete").getAttribute("value");
+        // const val=document.getElementById("delete").getAttribute("value");
         // const val=HTML.get.target.getAttribute("value");
         // console.log(val);
-        props.loader();
-        setState({...state,undoExport:true,undoExportId:val,showLoader:true})
+        console.log(e);
+        // props.loader(); 
+        setState({...state,undoExport:true,undoExportId:e,showLoader:true})
     }
     function DisplayTable(searchBar,items){
         return(
@@ -307,7 +310,7 @@ new Date().getFullYear()+'.pdf')
                            {i.purpose}
                           </td>
                           <td className="td-1"> 
-                            <div id="delete" onClick={handleDelete} value={i._id}>
+                            <div id="delete" onClick={()=>handleDelete(i._id)} value={ind}>
                                 <DeleteIcon/>
                             </div>
                           </td>

@@ -10,7 +10,7 @@ async function undoExport(id){
     })
     .catch(err=>{
         // ans=false;
-        ans=err.data.res;
+        ans=null;
     })
     return ans;
 }
