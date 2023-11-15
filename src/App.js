@@ -14,6 +14,8 @@ import Import from './components/Import';
 import Export from './components/Export';
 import DeleteOptions from './components/DeleteOptions';
 import Delete from './components/Delete';
+import NewUser from './components/NewUser';
+import Users from './components/Users';
 function App(){
   const [state,setState]=useState(
     {
@@ -39,6 +41,8 @@ function App(){
           <Route path="import" element={<Import/>}/>
           <Route path="delete" element={<DeleteOptions/>}/>
           <Route path="export" element={<Export/>}/>
+          <Route path="users" element={<Users/>}/>
+          
         </Route>
         
       </Routes>

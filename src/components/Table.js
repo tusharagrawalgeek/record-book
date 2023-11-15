@@ -8,7 +8,6 @@ import dateFilterUtil from '../functions/dateFilterUtil.js';
 import searchQuery from "./searchQuery.js";
 import * as color from '../colors.js';
 import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { styled } from "@mui/system";
 import Pdfico from '@mui/icons-material/PictureAsPdf';
@@ -301,7 +300,7 @@ new Date().getFullYear()+'.pdf')
                                 {i.date}
                                </td>
                                <td className="td-1">
-                                {i.name.charAt(0).toUpperCase() + i.name.slice(1)}
+                                {i.name?.charAt(0).toUpperCase() + i.name?.slice(1)}
                                </td>
                                <td className="td-1">
                                 {i.receivedFrom}

@@ -56,10 +56,19 @@ function SideBar(){
                                 <td className={state.selectedOption==="delete"?"tr-left-selected":"tr-left"}
                                 onClick={handleClick}
                                 name="delete">
-                                    Delete/Remove
+                                    Delete
                                 </td>
                                 </Link>
-                            </tr>
+                            </tr>   
+                            {/* <tr >
+                                <Link to="/home/users">
+                                <td className={state.selectedOption==="users"?"tr-left-selected":"tr-left"}
+                                onClick={handleClick}
+                                name="users">
+                                     Users 
+                                </td>
+                                </Link>
+                            </tr> */}
                             <tr >
                                 <Link to="/">
                                 <td className={state.selectedOption==="logout"?"tr-left-selected":"tr-left"}
