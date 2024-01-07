@@ -12,5 +12,5 @@ const testurl="https://test-recordbook-backend.onrender.com";
 // }
 
 // const url = getUrl();
-const url=ogurl;
+const url=testurl;
 export default url;
