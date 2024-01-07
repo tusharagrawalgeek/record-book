@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "CI=fale&react-scripts build",
+    "build": "process.env.CI=fale&react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
