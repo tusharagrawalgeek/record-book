@@ -26,7 +26,7 @@
 
 }
 .input{
-    background: black;
+    background: white;
     color: var(--white);
     margin: 1em;
     border: 0;
@@ -309,3 +309,32 @@ td{
     margin: 1rem 1rem 0;
     vertical-align:bottom;
 }
+
+.label{
+    font-weight: bold;
+    display: flex;
+    margin-bottom: 5px;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="data"],input[type='password']{
+    display: block;
+    width: 400px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    color:black;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    /* margin-bottom: 20px; */
+  }
+  .error{
+    color:orange;
+    font-size: 12px;
+    text-align: left;
+  }
+  .form-control{
+    margin-bottom: 20px;
+  }

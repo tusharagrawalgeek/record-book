@@ -35,13 +35,13 @@ function ExportedTable(props){
             console.log(state.undoExportId);
             const res =await undoExport(state.undoExportId);  
             if(res){
-                console.log("undo successfull");
+                
                 setState({...state, undoExport:false, undoExportId:null,showLoader:false});
                 alert("Undo successfull");
                 // props.loader();
                 // props.refresh();
             }else{
-                console.log("undo unsuccessfull");
+                
                 alert("Undo unsuccessfull");
                 setState({...state, undoExport:false,showLoader:false});
             }
@@ -78,7 +78,7 @@ function ExportedTable(props){
         }))
     }
     function clearDateFilter(){
-        // console.log("cleared");
+        // 
         setState(p=>({
             ...p,
             showFilterPopup:false,
@@ -116,7 +116,7 @@ function ExportedTable(props){
         }))
     },[state.from,state.to])
     // useEffect(()=>{
-    //     console.log("searchquery");
+    //     
         
     // },[state.searchValue])
     function handleChange(e){

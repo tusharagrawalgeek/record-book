@@ -8,7 +8,6 @@ import dateFilterUtil from '../functions/dateFilterUtil.js';
 import searchQuery from "./searchQuery.js";
 import * as color from '../colors.js';
 import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { styled } from "@mui/system";
 import Pdfico from '@mui/icons-material/PictureAsPdf';
@@ -35,7 +34,7 @@ function Table(props){
     // useEffect(()=>{
         // console.log(state.items,props.items);
         if(state.items!==props.items){
-            console.log(true);
+            // console.log(true);
             setState(p=>({
                 ...p,
                 items:props.items,
@@ -66,7 +65,7 @@ function Table(props){
         }))
     }
     function clearDateFilter(){
-        console.log("cleared");
+        
         setState(p=>({
             ...p,
             showFilterPopup:false,
@@ -77,7 +76,7 @@ function Table(props){
     //date changed
     function handleDateChange(e){
         const obj=e.target;
-        console.log(obj.name,obj.value);
+        // console.log(obj.name,obj.value);
         setState(p=>({
             ...p,
             [obj.name]:obj.value
@@ -147,7 +146,7 @@ function Table(props){
         }))
     },[state.from,state.to])
     // useEffect(()=>{
-    //     console.log("searchquery");
+    //     
         
     // },[state.searchValue])
     function handleChange(e){
@@ -301,7 +300,7 @@ new Date().getFullYear()+'.pdf')
                                 {i.date}
                                </td>
                                <td className="td-1">
-                                {i.name.charAt(0).toUpperCase() + i.name.slice(1)}
+                                {i.name?.charAt(0).toUpperCase() + i.name?.slice(1)}
                                </td>
                                <td className="td-1">
                                 {i.receivedFrom}

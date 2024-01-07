@@ -254,7 +254,7 @@ function Export() {
     state.currentItems.map((j) => {
       console.log(j._id, itemId);
       if (j._id === itemId) {
-        console.log("here");
+        
         item = j;
         return true;
       }
@@ -353,7 +353,7 @@ function Export() {
     }));
   }
   function closeModalCallback() {
-    console.log("Callback");
+    
     setState((p) => ({
       ...p,
       showModal: false,
