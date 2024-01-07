@@ -9,8 +9,14 @@ import Modal from "./Modal.js";
 import ExportedTable from "./ExportedTable";
 import searchQuery from "./searchQuery";
 import Select from "react-select";
-
+import { decrypt } from "../helpers/decrypter.js";
+import { useNavigate } from "react-router-dom";
 function Export() {
+  const navigate=useNavigate();
+  useEffect(()=>{
+    if(localStorage.getItem("profile")&&decrypt(localStorage.getItem('profile'))!=='admin')
+    navigate('/home/dashboard')
+  },[])
   const [state, setState] = useState({
     dateExported:
       new Date().getDate() +

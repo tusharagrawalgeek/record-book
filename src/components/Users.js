@@ -5,7 +5,14 @@ import Table from "./Table";
 import { useEffect } from "react";
 import getUsers from "../api/getUsers";
 import MuiTable from "./MuiTable";
+import { decrypt } from "../helpers/decrypter.js";
+import { useNavigate } from "react-router-dom";
 function Users(){
+    const navigate=useNavigate();
+  useEffect(()=>{
+    if(localStorage.getItem("profile")&&decrypt(localStorage.getItem('profile'))!=='admin')
+    navigate('/home/dashboard')
+  },[])
     const[state,setState]=useState({
         display:"table",//table or form
         users:[]

@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Login from "./components/Login";
 import {
   BrowserRouter as Router,
@@ -49,7 +49,8 @@ function App() {
   //   // Do something with request error
   //   return Promise.reject(error);
   // });
-  const profile = decrypt(localStorage.getItem("profile")?localStorage.getItem("profile"):encrypt(''));
+  // const profile = decrypt(localStorage.getItem("profile")?localStorage.getItem("profile"):encrypt(''));
+  
   return (
     <>
       <Router>
@@ -57,14 +58,10 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/home" element={<HomePage />}>
             <Route path="dashboard" element={<Dashboard />} />
-            {profile === "admin" && (
-              <>
                 <Route path="import" element={<Import />} />
                 <Route path="delete" element={<DeleteOptions />} />
                 <Route path="export" element={<Export />} />
                 <Route path="users" element={<Users />} />
-              </>
-            )}
           </Route>
         </Routes>
       </Router>

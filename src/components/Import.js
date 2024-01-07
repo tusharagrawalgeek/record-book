@@ -11,8 +11,15 @@ import { useEffect } from "react";
 import Modal from "./Modal";
 import Select from "react-select";
 import colourStyles from "../functions/SelectOptions";
+import { decrypt } from "../helpers/decrypter.js";
+import { useNavigate } from "react-router-dom";
 import getCurrentInventory from "../api/getInventoryItems";
 function Import() {
+  const navigate=useNavigate();
+  useEffect(()=>{
+    if(localStorage.getItem("profile")&&decrypt(localStorage.getItem('profile'))!=='admin')
+    navigate('/home/dashboard')
+  },[])
   const comp = useRef();
   const [state, setState] = useState({
     dateAdded: "",

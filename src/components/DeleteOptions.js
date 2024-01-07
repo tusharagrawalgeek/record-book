@@ -2,7 +2,14 @@ import React, { useState,useEffect } from "react";
 import * as color from "../colors.js";
 import Delete from "./Delete.js";
 import '../style.css';
+import { decrypt } from "../helpers/decrypter.js";
+import { useNavigate } from "react-router-dom";
 function DeleteOptions(){
+    const navigate=useNavigate();
+  useEffect(()=>{
+    if(localStorage.getItem("profile")&&decrypt(localStorage.getItem('profile'))!=='admin')
+    navigate('/home/dashboard')
+  },[])
     const[state,setState]=useState(
         {
             showOptions:true,
