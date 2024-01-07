@@ -5,7 +5,7 @@ async function checkUsername(username){
         return res;
     })
     .catch((err)=>{
-        console.log("Error in checkUsername API");
+        
     })
     return data;
 }

@@ -7,12 +7,12 @@ import addUser from "../api/addUser";
 export const NewUser = (props) => {
   const form = useForm({
     defaultValues: {
-      username: "Batman",
+      username: "",
       email: "abc@gmail.com",
       password: "",
       phoneNumbers: ["", ""],
       age: 0,
-      dob: new Date(),
+      profile: "employee",
     },
     mode: "onTouched",
   });
@@ -31,7 +31,6 @@ export const NewUser = (props) => {
     formState;
   const watchData = watch(["username", "email"]);
   async function onSubmit() {
-    console.log("suvmit clicked");
     const data = getValues();
     const newUser = {
       username: data.username.toLowerCase(),
@@ -39,10 +38,11 @@ export const NewUser = (props) => {
       phone: data.phoneNumbers[0],
       age: data.age,
       password: data.password,
+      profile: data.profile,
     };
     await addUser(newUser)
-      .then(res=>console.log(res.data))
-      .catch(console.log)
+      .then((res) => console.log(res.data))
+      .catch(console.log);
 
     // }
   }
@@ -52,14 +52,7 @@ export const NewUser = (props) => {
   function handleGetValues() {
     console.log(getValues());
   }
-  function handleSetValue() {
-    setValue("username", "Superman", { shouldValidate: "true" });
-    setValue("email", "abdcdac@gmil.com", { shouldValidate: "true" });
-    setValue("channel", "abcd ", { shouldValidate: "true" });
-    setValue("phoneNumbers[0]", 8941055198, { shouldValidate: "true" });
-    setValue("age", 20, { shouldValidate: "true" });
-    setValue("dob", "2023-09-20", { shouldValidate: "true" });
-  }
+
   function handleReset() {
     reset();
   }
@@ -193,31 +186,27 @@ export const NewUser = (props) => {
           <div className="error">{errors.age?.message}</div>
         </div>
         <div className="form-control">
-          <label htmlFor="dob">Date of Birth</label>
-          <br />
-          <input
-            type="date"
-            id="dob"
-            {...register("dob", {
-              // valueAsDate:true,
-              required: "This field is required",
-            })}
-          ></input>
-          <div className="error">{errors.dob?.message}</div>
+          <label style={{padding:"1rem"}}>Profile</label>
+          <select onChange={(e) => setValue("profile", e.target.value)} style={{padding:'.5rem 1rem '}}>
+            <option>Select</option>
+            <option>admin</option>
+            <option>employee</option>
+          </select>
         </div>
-        <button disabled={isSubmitting}>Submit</button>
-        <button type="button" onClick={handleGetValues}>
+
+        <button disabled={isSubmitting} style={{margin:'1rem 0'}}>Submit</button>
+        <br/>
+        {/* <button type="button" onClick={handleGetValues}>
           Get Field Values{" "}
-        </button>
-        <button type="button" onClick={handleSetValue}>
+        </button> */}
+        {/* <button type="button" onClick={handleSetValue}>
           Set username{" "}
-        </button>
-        <button type="button" onClick={handleReset}>
+        </button> */}
+        <button type="button" onClick={handleReset} style={{margin:'1rem 0'}}>
           Reset
         </button>
-        
       </form>
-      <button onClick={()=>props.cancelForm()}>Cancel</button>
+      <button onClick={() => props.cancelForm()} style={{margin:'1rem 0'}}>Cancel</button>
       <DevTool control={control} />
     </div>
   );

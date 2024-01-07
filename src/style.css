@@ -26,7 +26,7 @@
 
 }
 .input{
-    background: black;
+    background: white;
     color: var(--white);
     margin: 1em;
     border: 0;
@@ -318,7 +318,7 @@ td{
   input[type="text"],
   input[type="email"],
   input[type="number"],
-  input[type="data"]{
+  input[type="data"],input[type='password']{
     display: block;
     width: 400px;
     padding: 6px 12px;

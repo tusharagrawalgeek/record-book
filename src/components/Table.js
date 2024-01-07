@@ -34,7 +34,7 @@ function Table(props){
     // useEffect(()=>{
         // console.log(state.items,props.items);
         if(state.items!==props.items){
-            console.log(true);
+            // console.log(true);
             setState(p=>({
                 ...p,
                 items:props.items,
@@ -65,7 +65,7 @@ function Table(props){
         }))
     }
     function clearDateFilter(){
-        console.log("cleared");
+        
         setState(p=>({
             ...p,
             showFilterPopup:false,
@@ -76,7 +76,7 @@ function Table(props){
     //date changed
     function handleDateChange(e){
         const obj=e.target;
-        console.log(obj.name,obj.value);
+        // console.log(obj.name,obj.value);
         setState(p=>({
             ...p,
             [obj.name]:obj.value
@@ -146,7 +146,7 @@ function Table(props){
         }))
     },[state.from,state.to])
     // useEffect(()=>{
-    //     console.log("searchquery");
+    //     
         
     // },[state.searchValue])
     function handleChange(e){

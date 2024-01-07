@@ -21,7 +21,7 @@ function Delete(props){
     );
      useEffect(()=>{
         if(state.showLoader){
-        console.log("delete started");
+        
         const promises=state.cbdata.map(i=>{
             var promise=new Promise(async(resolve,reject)=>{
                 const listType=state.name==="inventory"?"deleteitem":state.name==="importedItems"?"deleteimporteditem":"deleteexporteditem"
@@ -37,7 +37,7 @@ function Delete(props){
             })
             return promise;
         })
-        console.log("Delete ended");
+        
         Promise.all(promises)
             .then(()=>{
                 console.log(promises)
@@ -126,7 +126,7 @@ function Delete(props){
         }))
     }
     function closeModalCallback(){
-        console.log("Callback");
+        
         setState(p=>({
             ...p,
             showModal:false,

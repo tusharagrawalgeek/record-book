@@ -11,7 +11,7 @@ function MuiTable(props){
                             USERNAME
                         </TableCell>
                         <TableCell  style={{color:'#00ADB5' , fontWeight:"bold"}}>
-                            AGE
+                            PROFILE
                         </TableCell>
                         <TableCell style={{color:'#00ADB5', fontWeight:"bold"}}>
                             PHONE
@@ -31,7 +31,7 @@ function MuiTable(props){
                                         {i.username}
                                     </TableCell>
                                     <TableCell style={{color:"white"}}>
-                                        {i.age}
+                                        {i.profile}
                                     </TableCell>
                                     <TableCell style={{color:"white"}}>
                                         {i.phone}

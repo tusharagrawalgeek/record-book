@@ -82,7 +82,7 @@ function Import() {
             });
           // }
         } else {
-          // console.log("here ");
+          // 
           resolve("Added all the data");
         }
       });
@@ -231,7 +231,7 @@ function Import() {
   }, [state.showModal]);
 
   function closeModalCallback() {
-    // console.log("Callback");
+    // 
     setState((p) => ({
       ...p,
       showModal: false,

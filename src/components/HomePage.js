@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SideBar from "./SideBar";
 import '../style.css';
 import Dashboard from "./Dashboard";
 import Import from "./Import";
+import { useNavigate } from "react-router-dom";
 import ham from '../ham.png'
 import {
     BrowserRouter as Router,
@@ -18,6 +19,12 @@ import { useState } from "react";
                 showSidebar:true
             }
         )
+            const navigate=useNavigate();
+    useEffect(()=>{
+            if(!(localStorage.getItem('test')==='true'||localStorage.getItem('user'))){
+                navigate('/')
+            }            
+    },[])
     return(
         <>
         {/* <Router> */}

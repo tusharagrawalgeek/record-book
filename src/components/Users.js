@@ -22,11 +22,9 @@ function Users(){
         var allusers;
         await getUsers()
        .then(res=>{
-        console.log(res);
         allusers=res;
        })
        .catch(console.log)
-       console.log(allusers);
        setState({...state,users:allusers});
        }
     useEffect( ()=>{
