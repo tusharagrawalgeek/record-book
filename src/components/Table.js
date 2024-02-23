@@ -11,6 +11,8 @@ import jsPDF from 'jspdf'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { styled } from "@mui/system";
 import Pdfico from '@mui/icons-material/PictureAsPdf';
+import "jspdf-autotable";
+
 function Table(props){
     const [state,setState]=useState(
         {
